@@ -316,7 +316,56 @@ img {
   padding: 2rem;
 }
 
+/* Dashboard Styles */
+.dashboard-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
 
+.dashboard-title {
+  color: var(--color-primary);
+  margin-bottom: 2rem;
+}
+
+.booking-section {
+  background-color: var(--color-bg-variant);
+  padding: 2rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.booking-section h2 {
+  margin-bottom: 1rem;
+}
+
+.booking-section select {
+  width: 200px;
+  padding: 0.5rem;
+  margin-right: 1rem;
+  border-radius: 4px;
+  border: 1px solid var(--color-primary);
+}
+
+.booking-section button {
+  padding: 0.5rem 1rem;
+}
+
+.booked-slots {
+  background-color: var(--color-bg-variant);
+  padding: 2rem;
+  border-radius: 8px;
+}
+
+.booked-slots ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.booked-slots li {
+  margin: 0.5rem 0;
+}
 
 
 
