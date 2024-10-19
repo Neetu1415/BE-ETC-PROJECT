@@ -324,10 +324,10 @@ img {
   text-align: center;
 }
 
-.dashboard-title {
+/*.dashboard-title {
   color: var(--color-primary);
   margin-bottom: 2rem;
-}
+}*/
 
 .booking-section {
   background-color: var(--color-bg-variant);

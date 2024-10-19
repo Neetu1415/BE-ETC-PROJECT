@@ -36,7 +36,7 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-      <h1 className="dashboard-title">Welcome, {userInfo.first_name}</h1>
+      <h1 className="dashboard-title">Welcome, {userInfo?.first_name || 'User'}</h1>
       
       <div className="booking-section">
         <h2>Book a Slot</h2>
