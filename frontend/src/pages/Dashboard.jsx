@@ -5,14 +5,14 @@ const Dashboard = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const [selectedSlot, setSelectedSlot] = useState('');
   const [bookedSlots, setBookedSlots] = useState([]);
+  const [showPayment, setShowPayment] = useState(false);
 
-  // Dummy data for available slots (replace with actual data from your backend)
   const availableSlots = [
-    { id: 1, time: '9:00 AM' },
-    { id: 2, time: '10:00 AM' },
-    { id: 3, time: '11:00 AM' },
-    { id: 4, time: '2:00 PM' },
-    { id: 5, time: '3:00 PM' },
+    { id: 1, time: '9:00 AM', price: 50 },
+    { id: 2, time: '10:00 AM', price: 50 },
+    { id: 3, time: '11:00 AM', price: 50 },
+    { id: 4, time: '2:00 PM', price: 50 },
+    { id: 5, time: '3:00 PM', price: 50 },
   ];
 
   const handleSlotChange = (e) => {
@@ -21,12 +21,17 @@ const Dashboard = () => {
 
   const handleBookSlot = () => {
     if (selectedSlot) {
-      const bookedSlot = availableSlots.find(slot => slot.id === parseInt(selectedSlot));
-      setBookedSlots([...bookedSlots, bookedSlot]);
-      setSelectedSlot('');
-      // Here you would typically make an API call to book the slot
-      console.log(`Booked slot: ${bookedSlot.time}`);
+      setShowPayment(true);
     }
+  };
+
+  const handlePayment = () => {
+    const bookedSlot = availableSlots.find(slot => slot.id === parseInt(selectedSlot));
+    setBookedSlots([...bookedSlots, bookedSlot]);
+    setSelectedSlot('');
+    setShowPayment(false);
+    // Here you would typically make an API call to book the slot
+    console.log(`Booked slot: ${bookedSlot.time}`);
   };
 
   return (
@@ -39,19 +44,27 @@ const Dashboard = () => {
           <option value="">Select a slot</option>
           {availableSlots.map((slot) => (
             <option key={slot.id} value={slot.id}>
-              {slot.time}
+              {slot.time} - ${slot.price}
             </option>
           ))}
         </select>
         <button onClick={handleBookSlot} className="btn btn-primary">Book Slot</button>
       </div>
 
+      {showPayment && (
+        <div className="payment-section">
+          <h2>Make Payment</h2>
+          <p>Price: ${availableSlots.find(slot => slot.id === parseInt(selectedSlot)).price}</p>
+          <button onClick={handlePayment} className="btn btn-primary">Pay Now</button>
+        </div>
+      )}
+
       <div className="booked-slots">
         <h2>Your Booked Slots</h2>
         {bookedSlots.length > 0 ? (
           <ul>
             {bookedSlots.map((slot) => (
-              <li key={slot.id}>{slot.time}</li>
+              <li key={slot.id}>{slot.time} - ${slot.price}</li>
             ))}
           </ul>
         ) : (
@@ -62,40 +75,11 @@ const Dashboard = () => {
   );
 };
 
-  /*return (
-    <div>
-      <h1>Welcome, {userInfo.first_name}</h1>
-      
-      <div>
-        <h2>Book a Slot</h2>
-        <select value={selectedSlot} onChange={handleSlotChange}>
-          <option value="">Select a slot</option>
-          {availableSlots.map((slot) => (
-            <option key={slot.id} value={slot.id}>
-              {slot.time}
-            </option>
-          ))}
-        </select>
-        <button onClick={handleBookSlot}>Book Slot</button>
-      </div>
-
-      <div>
-        <h2>Your Booked Slots</h2>
-        {bookedSlots.length > 0 ? (
-          <ul>
-            {bookedSlots.map((slot) => (
-              <li key={slot.id}>{slot.time}</li>
-            ))}
-          </ul>
-        ) : (
-          <p>You haven't booked any slots yet.</p>
-        )}
-      </div>
-    </div>
-  );
-};
-*/
 export default Dashboard;
+
+
+
+
 
 
 /*To integrate this with your backend:
@@ -119,20 +103,3 @@ const Dashboard = () => {
   // ... rest of the component
 };*/
 
-/*import React from 'react'
-import { useSelector } from 'react-redux'
-
-
-const Dashboard = () => {
-
-    const { userInfo } = useSelector((state) => state.auth)
-
-
-    return (
-        <div>
-            <h1>Welcome, {userInfo.first_name} </h1>
-        </div>
-    )
-}
-
-export default Dashboard*/
