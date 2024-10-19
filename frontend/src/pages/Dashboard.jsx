@@ -1,10 +1,16 @@
+
+
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css'; // Import calendar styles
 
 const Dashboard = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const [selectedSlot, setSelectedSlot] = useState('');
+  const [selectedDate, setSelectedDate] = useState(null);
   const [bookedSlots, setBookedSlots] = useState([]);
+  const [showCalendar, setShowCalendar] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
 
   const availableSlots = [
@@ -17,30 +23,40 @@ const Dashboard = () => {
 
   const handleSlotChange = (e) => {
     setSelectedSlot(e.target.value);
+    setShowCalendar(true);
   };
 
   const handleBookSlot = () => {
-    if (selectedSlot) {
+    if (selectedDate) {
       setShowPayment(true);
     }
   };
 
   const handlePayment = () => {
     const bookedSlot = availableSlots.find(slot => slot.id === parseInt(selectedSlot));
-    setBookedSlots([...bookedSlots, bookedSlot]);
+    const newBooking = {
+      ...bookedSlot,
+      date: selectedDate.toLocaleDateString(),
+    };
+    setBookedSlots([...bookedSlots, newBooking]);
     setSelectedSlot('');
+    setSelectedDate(null);
+    setShowCalendar(false);
     setShowPayment(false);
-    // Here you would typically make an API call to book the slot
-    console.log(`Booked slot: ${bookedSlot.time}`);
+    console.log(`Booked slot: ${bookedSlot.time} on ${newBooking.date}`);
   };
 
   return (
     <div className="dashboard-container">
       <h1 className="dashboard-title">Welcome, {userInfo?.first_name || 'User'}</h1>
-      
+
+      <div className="intro-section">
+        <p>Welcome to our sports facility! Select a time slot to book your session, then choose a date to finalize your booking.</p>
+      </div>
+
       <div className="booking-section">
-        <h2>Book a Slot</h2>
-        <select value={selectedSlot} onChange={handleSlotChange}>
+        <h2>Book a Time Slot</h2>
+        <select value={selectedSlot} onChange={handleSlotChange} className="slot-select">
           <option value="">Select a slot</option>
           {availableSlots.map((slot) => (
             <option key={slot.id} value={slot.id}>
@@ -48,13 +64,34 @@ const Dashboard = () => {
             </option>
           ))}
         </select>
-        <button onClick={handleBookSlot} className="btn btn-primary">Book Slot</button>
       </div>
+
+      {showCalendar && (
+        <div className="calendar-section">
+          <h2>Select a Date    </h2>
+          <Calendar onChange={setSelectedDate} value={selectedDate} />
+        </div>
+      )}
+
+      {selectedDate && (
+        <div className="confirm-section">
+          <h2>Confirm Booking</h2>
+          <div className="booking-summary">
+            <p>Selected Slot: {availableSlots.find(slot => slot.id === parseInt(selectedSlot))?.time}</p>
+            <p>Selected Date: {selectedDate.toLocaleDateString()}</p>
+          </div>
+          <button onClick={handleBookSlot} className="btn btn-primary">Confirm Slot</button>
+        </div>
+      )}
 
       {showPayment && (
         <div className="payment-section">
           <h2>Make Payment</h2>
-          <p>Price: ${availableSlots.find(slot => slot.id === parseInt(selectedSlot)).price}</p>
+          <p>
+            Time Slot: {availableSlots.find(slot => slot.id === parseInt(selectedSlot)).time} <br />
+            Date: {selectedDate.toLocaleDateString()} <br />
+            Price: ${availableSlots.find(slot => slot.id === parseInt(selectedSlot)).price}
+          </p>
           <button onClick={handlePayment} className="btn btn-primary">Pay Now</button>
         </div>
       )}
@@ -63,12 +100,14 @@ const Dashboard = () => {
         <h2>Your Booked Slots</h2>
         {bookedSlots.length > 0 ? (
           <ul>
-            {bookedSlots.map((slot) => (
-              <li key={slot.id}>{slot.time} - ${slot.price}</li>
+            {bookedSlots.map((slot, index) => (
+              <li key={index}>
+                {slot.date} - {slot.time} - ${slot.price}
+              </li>
             ))}
           </ul>
         ) : (
-          <p>You haven't booked any slots yet.</p>
+          <p>No bookings yet. Select a time slot and date to get started!</p>
         )}
       </div>
     </div>
@@ -76,9 +115,6 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
-
-
 
 
 

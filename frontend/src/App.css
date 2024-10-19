@@ -317,7 +317,7 @@ img {
 }
 
 /* Dashboard Styles */
-.dashboard-container {
+/*.dashboard-container {
   max-width: 800px;
   margin: 0 auto;
   padding: 2rem;
@@ -328,6 +328,7 @@ img {
   color: var(--color-primary);
   margin-bottom: 2rem;
 }*/
+
 
 .booking-section {
   background-color: var(--color-bg-variant);
@@ -374,6 +375,135 @@ img {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+*/
+:root {
+  --color-primary: #007bff;
+  --color-bg-variant: #f9f9f9;
+  --color-text-dark: #333;
+  --color-border: #e0e0e0;
+}
+
+.dashboard-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.dashboard-title {
+  color: var(--color-primary);
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+
+.intro-section p {
+  font-size: 1.1rem;
+  color: var(--color-text-dark);
+  margin-bottom: 2rem;
+}
+
+.booking-section {
+  background-color: var(--color-bg-variant);
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.booking-section h2 {
+  color: var(--color-primary);
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.booking-section select {
+  width: 220px;
+  padding: 0.75rem;
+  border-radius: 4px;
+  border: 1px solid var(--color-border);
+  font-size: 1rem;
+}
+.calendar-section {
+  margin: 2rem 0; /* Adjust the spacing as needed */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.calendar-section h2 {
+  margin-bottom: 1rem; /* Add spacing below the heading */
+}
+
+.react-calendar {
+  max-width: 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+
+.confirm-section {
+  margin-top: 2rem;
+}
+
+.booking-summary {
+  font-size: 1.1rem;
+  color: var(--color-text-dark);
+  margin-bottom: 1rem;
+}
+
+.confirm-section p {
+  margin-bottom: 0.5rem;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+.payment-section {
+  background-color: var(--color-bg-variant);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 2rem;
+}
+
+.booked-slots {
+  background-color: var(--color-bg-variant);
+  padding: 2rem;
+  border-radius: 8px;
+  margin-top: 2rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.booked-slots h2 {
+  font-size: 1.5rem;
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+}
+
+.booked-slots ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.booked-slots li {
+  background-color: #0056b3;
+  padding: 0.75rem;
+  margin: 0.5rem 0;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  font-size: 1.1rem;
+}
 
 
 
