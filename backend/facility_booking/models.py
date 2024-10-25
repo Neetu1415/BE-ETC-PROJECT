@@ -40,10 +40,9 @@ class Charges(models.Model):
 
 
 class Booking(models.Model):
-    userid=models.Foreignkey(get_user_model(), on_delete=models.CACSCADE) CharField(max_length=200,blank=True,null=True)
+    userid=models.Foreignkey(get_user_model(), on_delete=models.CACSCADE) 
     spid=models.Foreignkey(Sports_complex, on_delete=models.CACSCADE)
-    Datefield
-    timefield
-
-    CharField(max_length=200,blank=True,null=True)
+    date_field = models.DateField() # to be clarified
+    time_field = models.TimeField() #to be clarified
+    additional_info = models.CharField(max_length=200, blank=True, null=True) #to be clarified
     facility=models.CharField(max_length=3, choices=FACILITY_class.choices(),blank=True,null=True)
