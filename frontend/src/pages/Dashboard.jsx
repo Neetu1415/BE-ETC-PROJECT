@@ -118,6 +118,8 @@ export default Dashboard;
 
 
 
+
+
 /*To integrate this with your backend:
 
 Replace the availableSlots array with data fetched from your backend API.
