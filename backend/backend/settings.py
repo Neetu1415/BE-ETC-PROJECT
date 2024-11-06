@@ -154,7 +154,7 @@ SIMPLE_JWT = {
         "JWT"),
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=120),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=60),
-    "SIGNING_KEY": env("SIGNING_KEY"),
+    "SIGNING_KEY": "rwDet4skLjEIJn6sWh6pGDBS6SJj1r1f",
     "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
 }
@@ -179,11 +179,11 @@ DJOSER = {
 }
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = env("EMAIL_HOST")
+EMAIL_HOST = "sandbox.smtp.mailtrap.io"
 EMAIL_USE_TLS = True
-EMAIL_PORT = env("EMAIL_PORT")
-EMAIL_HOST_USER = env("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+EMAIL_PORT = "2525"
+EMAIL_HOST_USER = "a2e6b82843d32f"
+EMAIL_HOST_PASSWORD = "7fdd8afc07a3fc"
 DEFAULT_FROM_EMAIL = "sportshub202543@gmail.com"
 DOMAIN = env("DOMAIN")
 SITE_NAME = "WEBSITE"
