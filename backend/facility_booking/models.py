@@ -34,7 +34,7 @@ class ChargeType(models.TextChoices):
 
 class Charges(models.Model):
     spid=models.Foreignkey(Sports_complex, on_delete=models.CACSCADE)
-    gp=models.CharField(max_length=6, on_delete=models.CACSCADE)
+    gp=models.CharField(max_length=6, on_delete=models.CACSCADE)# doubt regarding choices
     typ=models.CharField(max_length=3, choices=ChargeType.choices)
     rates=models.DecimalField(max_digits=5, decimal_places=2)
 
