@@ -54,6 +54,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     #internal apps
     'users',
+    'sports_facility',
+    'facility_booking',
 ]
 
 MIDDLEWARE = [

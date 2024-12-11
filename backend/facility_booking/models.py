@@ -1,10 +1,9 @@
 from django.db import models
-from django.contrib.auth import get_user_model 
-from enum import Enum
 
 # Create your models here.
-from sports_facility.models import Sports_complex
-
+from django.contrib.auth import get_user_model
+from sports_facility.models import Sports_complex , FACILITY_class
+from enum import Enum
 
 
 class GROUP_class(Enum):
@@ -16,33 +15,37 @@ class GROUP_class(Enum):
     HP = 'Hourly Pass'
     STUD = 'Students'
     NSTUD = 'Non Students'
-    CA=' Recognized state Sports Association for conduct of Zonal Championship/Federation Cup/ National Championship/ International Championship or Government / Government aided primary/Secondary / Higher Secondary Schools for Sports Day '
-    CB='SAG Registered Sports. Club/State Sports Association/ - League Clubs/ NGOs having annual turnover of less than 3 Lakhs/ Other Educational Institutions for the conduct of any other sporting event (excluding those covered in Cat (A) '
-    CC='Sporting event by private party/ Organisations/ other NGOs (not covered in cat B) or Educational events/ Discours/ Lectures for/ by intuitions registered under societies Registrations'
+    CA = 'Recognized state Sports Association for conduct of Zonal Championship/Federation Cup/ National Championship/ International Championship or Government / Government aided primary/Secondary / Higher Secondary Schools for Sports Day'
+    CB = 'SAG Registered Sports Club/State Sports Association - League Clubs/ NGOs having annual turnover of less than 3 Lakhs/ Other Educational Institutions for the conduct of any other sporting event (excluding those covered in Cat (A)'
+    CC = 'Sporting event by private party/Organisations/other NGOs (not covered in cat B) or Educational events/Discours/Lectures for/by institutions registered under societies Registrations'
+
+    @classmethod
+    def choices(cls):
+        return [(key.name, key.value) for key in cls]
 
 
 class ChargeType(models.TextChoices):
     D = 'DAILY', 'Daily'
     M = 'MONTHLY', 'Monthly'
-    HP= 'Hourly Pass'
-    Q='Quarterly'
-    Y='Annualy'
-    OR='One Registration'
-    MEM='Membership renewal'
+    HP = 'HOURLY PASS', 'Hourly Pass'
+    Q = 'QUARTERLY', 'Quarterly'
+    Y = 'ANNUALLY', 'Annually'
+    OR = 'ONE REGISTRATION', 'One Registration'
+    MEM = 'MEMBERSHIP RENEWAL', 'Membership Renewal'
 
-    
 
 class Charges(models.Model):
-    spid=models.Foreignkey(Sports_complex, on_delete=models.CACSCADE)
-    gp=models.CharField(max_length=6, on_delete=models.CACSCADE)# doubt regarding choices
-    typ=models.CharField(max_length=3, choices=ChargeType.choices)
-    rates=models.DecimalField(max_digits=5, decimal_places=2)
+    sports_complex = models.ForeignKey(Sports_complex, on_delete=models.CASCADE)
+    group = models.CharField(max_length=100, choices=GROUP_class.choices())  # Adjusted max_length
+    type = models.CharField(max_length=20, choices=ChargeType.choices)  # Adjusted max_length
+    rate = models.DecimalField(max_digits=10, decimal_places=2)  # Adjusted field name for clarity
 
 
 class Booking(models.Model):
-    userid=models.Foreignkey(get_user_model(), on_delete=models.CACSCADE) 
-    spid=models.Foreignkey(Sports_complex, on_delete=models.CACSCADE)
-    date_field = models.DateField() # to be clarified
-    time_field = models.TimeField() #to be clarified
-    additional_info = models.CharField(max_length=200, blank=True, null=True) #to be clarified
-    facility=models.CharField(max_length=3, choices=FACILITY_class.choices(),blank=True,null=True)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)  # Fixed typo in CASCADE
+    sports_complex = models.ForeignKey(Sports_complex, on_delete=models.CASCADE)  # Fixed typo in CASCADE
+    booking_date = models.DateField()  # Clarified field name
+    booking_time = models.TimeField()  # Clarified field name
+    additional_info = models.CharField(max_length=200, blank=True, null=True)  # Allow blank and null
+    facility = models.CharField(max_length=100, choices=FACILITY_class.choices())  # Adjusted max_length
+
