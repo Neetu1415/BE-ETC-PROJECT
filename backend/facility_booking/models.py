@@ -25,13 +25,13 @@ class GROUP_class(Enum):
 
 
 class ChargeType(models.TextChoices):
-    D = 'DAILY', 'Daily'
-    M = 'MONTHLY', 'Monthly'
-    HP = 'HOURLY PASS', 'Hourly Pass'
-    Q = 'QUARTERLY', 'Quarterly'
-    Y = 'ANNUALLY', 'Annually'
-    OR = 'ONE REGISTRATION', 'One Registration'
-    MEM = 'MEMBERSHIP RENEWAL', 'Membership Renewal'
+    D = 'DAILY', 
+    M = 'MONTHLY', 
+    HP = 'HOURLY PASS', 
+    Q = 'QUARTERLY', 
+    Y = 'ANNUALLY', 
+    OR = 'ONE REGISTRATION', 
+    MEM = 'MEMBERSHIP RENEWAL', 
 
 
 class Charges(models.Model):
