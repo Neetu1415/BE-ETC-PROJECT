@@ -4,6 +4,31 @@ import '../App.css';
 const FacilityBookings = () => {
   const [bookings, setBookings] = useState([]);
 
+
+ const groupMapping ={
+  GAID : 'Govt Aided Educational Institution',
+  EDINST : 'Educational Institutions',
+  AGSCF : 'Association/Govt/Sports events/Clubs/Federations',
+  OVNR : 'Other village clubs which are not registered to SAG',
+  PSEV : 'Private Sporting events/Tariff for others',
+  HP : 'Hourly Pass',
+  STUD : 'Students',
+  NSTUD : 'Non Students',
+  CA : 'Recognized state Sports Association for conduct of Zonal Championship/Federation Cup/ National Championship/ International Championship or Government / Government aided primary/Secondary / Higher Secondary Schools for Sports Day',
+  CB : 'SAG Registered Sports Club/State Sports Association - League Clubs/ NGOs having annual turnover of less than 3 Lakhs/ Other Educational Institutions for the conduct of any other sporting event (excluding those covered in Cat (A)',
+  CC : 'Sporting event by private party/Organisations/other NGOs (not covered in cat B) or Educational events/Discours/Lectures for/by institutions registered under societies Registrations'
+
+ };
+
+ const typeMapping = {
+    D : 'DAILY', 
+    M : 'MONTHLY', 
+    HP : 'HOURLY PASS', 
+    Q : 'QUARTERLY', 
+    Y : 'ANNUALLY', 
+    OR : 'ONE REGISTRATION', 
+    MEM : 'MEMBERSHIP RENEWAL', 
+};
   // Fetch data with async/await
   useEffect(() => {
     const fetchBookings = async () => {
@@ -42,8 +67,8 @@ const FacilityBookings = () => {
             {bookings.map((booking) => (
               <tr key={booking.id}>
                 <td>{booking.sports_complex}</td>
-                <td>{booking.group}</td>
-                <td>{booking.type}</td>
+                <td>{groupMapping[booking.group] || 'Unknown Group'}}</td>
+                <td>{typeMapping[booking.type] || 'Unknown Type'}</td>
                 <td>{booking.rate}</td>
               </tr>
             ))}
