@@ -13,11 +13,14 @@ import NotFoundPage from "./pages/NotFoundPage";
 import './App.css';
 
 
+
+
+
 function App() {
   return (
     <>
       <Router>
-        <Nav />
+        < Nav/>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />

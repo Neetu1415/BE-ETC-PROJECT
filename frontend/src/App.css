@@ -209,6 +209,7 @@ img {
 
 
 /* Base styles for the navigation bar */
+/*
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -250,6 +251,7 @@ img {
   color: var(--color-white);
 }
 
+*/
 
 /* ============ Auth pages (Login, Register, Reset) ============ */
 
@@ -317,17 +319,54 @@ img {
 }
 
 /* Dashboard Styles */
-/*.dashboard-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem;
+/* Align title to the left */
+.title {
   text-align: center;
+  margin-bottom: 10px;
+  font-size: 1.8rem;
+  color: #ffffff; /* Set title color to white for contrast */
+}
+.title-container {
+  align-self: center; /* Align the title to the right independently */
+  margin-bottom: 10px;
+}
+/* Table Container */
+/* Table Styling */
+.table-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 64px; /* Adjust for AppBar height */
 }
 
-/*.dashboard-title {
-  color: var(--color-primary);
-  margin-bottom: 2rem;
-}*/
+.facility-table {
+  width: 50%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.facility-table th,
+.facility-table td {
+  border: 2px solid #444; /* Thick borders */
+  padding: 10px;
+  text-align: center;
+  
+}
+
+.facility-table th {
+  background-color: #1f1f38;
+  font-weight: bold;
+}
+
+/* Alternate row colors */
+.facility-table tr:nth-child(even) {
+  background-color: #1f1f38; /* Light gray */
+}
+
+.facility-table tr:nth-child(odd) {
+  background-color: #1f1f38; /* White */
+}
 
 
 .booking-section {
