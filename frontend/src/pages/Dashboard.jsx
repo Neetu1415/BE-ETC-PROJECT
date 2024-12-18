@@ -28,6 +28,40 @@ const FacilityBookings = () => {
     MEM: 'MEMBERSHIP RENEWAL',
   };
 
+  const facilityMapping = {
+    CT : 'cricket',
+    OFCT : 'open field cricket',
+    HT : 'hockey astro turf',
+    A1 : 'atheletic track',
+    A2 : 'atheletics',
+    CN : 'conference hall and other rooms',
+    S1 : 'Swimming Pool',
+    S2 : 'learn to swim Classes',
+    S3 : 'learn to swim and life saving',
+    S4 : 'use of swimming pool only through booking',
+    FT1 : 'football play field',
+    FT2 : 'D.B Bandodkar Football Ground',
+    GY : 'Gymnasium',
+    GT : 'Gymnastics',
+    IN : 'Indoor hall',
+    BD : 'Badminton',
+    INBD : 'indoor hall badminton',
+    TT : 'Table Tennis',
+    INTT : 'indoor hall table tennis',
+    WT : 'weightlifting',
+    INWT : 'indoor weight lifting',
+    TK : 'Taekwondo',
+    HB : 'handball',
+    BB : 'basketball',
+    CH : 'chess',
+    JD : 'Judo',
+    AC : 'archery',
+    BX : 'boxing',
+    RS : 'roller skating',
+    OF : 'Open field(outdoor)',
+    AA : 'all facilities',
+    OO : 'open field outdoor'
+  }
   // Fetch data with async/await
   useEffect(() => {
     const fetchBookings = async () => {
@@ -71,7 +105,7 @@ const FacilityBookings = () => {
               <tr key={booking.id}>
                 <td>{booking.uid}</td>
                 <td>{booking.sports_complex_name}</td>
-                <td>{booking.facility_type}</td>
+                <td>{facilityMapping[booking.facility_type] || 'Unknown facility'}</td>
                 <td>{groupMapping[booking.group] || 'Unknown Group'}</td>
                 <td>{typeMapping[booking.type] || 'Unknown Type'}</td>
                 <td>{booking.rate}</td>
