@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import '../App.css';
+import { TextField, MenuItem, Button } from '@mui/material';
+import { DatePicker, TimePicker } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 const FacilityBookings = () => {
   const [bookings, setBookings] = useState([]);
@@ -12,6 +16,8 @@ const FacilityBookings = () => {
   const [selectedGroup, setSelectedGroup] = useState('');
   const [selectedType, setSelectedType] = useState('');
   const [facilityRate, setFacilityRate] = useState(null); // To store the selected facility's rate
+  const [selectedDate, setSelectedDate] = useState(null); // Store the selected date
+  const [selectedTime, setSelectedTime] = useState(null); // Store the selected time
 
   const groupMapping = {
     GAID: 'Govt Aided Educational Institution',
@@ -139,7 +145,26 @@ const FacilityBookings = () => {
       console.log("Facility Rate:", rate);  // Log the rate value to check if it's correct
     }
   }, [selectedFacility, selectedGroup, selectedType, filteredBookings]);
-  
+
+  // Handle booking submission
+  const handleBookingSubmit = () => {
+    if (selectedDate && selectedTime && selectedFacility && selectedGroup && selectedType) {
+      // Logic for submitting the booking, you can post this data to the server
+      const bookingDetails = {
+        date: selectedDate,
+        time: selectedTime,
+        facility: selectedFacility,
+        group: selectedGroup,
+        type: selectedType,
+        rate: facilityRate
+      };
+
+      console.log("Booking Details:", bookingDetails);
+      // Submit the booking (e.g., send a POST request)
+    } else {
+      alert("Please select all the required fields.");
+    }
+  };
 
   return (
     <div className="dropdown-container">
@@ -148,93 +173,114 @@ const FacilityBookings = () => {
       </div>
 
       {/* Dropdown for selecting sports complex */}
-      <label htmlFor="sportsComplex">Select Sports Complex:</label>
-      <select
-        id="sportsComplex"
+      <TextField
+        select
+        label="Select Sports Complex"
         value={selectedComplex}
         onChange={(e) => setSelectedComplex(e.target.value)}
+        fullWidth
+        margin="normal"
       >
-        <option value="">Select a Complex</option>
+        <MenuItem value="">Select a Complex</MenuItem>
         {bookings
           .map((booking) => booking.sports_complex_name)
           .filter((value, index, self) => self.indexOf(value) === index) // Remove duplicates
           .map((complex, index) => (
-            <option key={index} value={complex}>
+            <MenuItem key={index} value={complex}>
               {complex}
-            </option>
+            </MenuItem>
           ))}
-      </select>
+      </TextField>
 
       {/* Dropdown for selecting a facility based on the selected complex */}
       {selectedComplex && (
-        <div className="facilities-dropdown">
-          <label htmlFor="facility">Select Facility:</label>
-          <select
-            id="facility"
-            value={selectedFacility}
-            onChange={(e) => setSelectedFacility(e.target.value)}
-          >
-            <option value="">Select a Facility</option>
-            {uniqueFacilities.length > 0 ? (
-              uniqueFacilities.map((facility) => (
-                <option key={facility} value={facility}>
-                  {facilityMapping[facility] || 'Unknown Facility'}
-                </option>
-              ))
-            ) : (
-              <option>No facilities available</option>
-            )}
-          </select>
-        </div>
+        <TextField
+          select
+          label="Select Facility"
+          value={selectedFacility}
+          onChange={(e) => setSelectedFacility(e.target.value)}
+          fullWidth
+          margin="normal"
+        >
+          <MenuItem value="">Select a Facility</MenuItem>
+          {uniqueFacilities.length > 0 ? (
+            uniqueFacilities.map((facility) => (
+              <MenuItem key={facility} value={facility}>
+                {facilityMapping[facility] || 'Unknown Facility'}
+              </MenuItem>
+            ))
+          ) : (
+            <MenuItem>No facilities available</MenuItem>
+          )}
+        </TextField>
       )}
 
       {/* Dropdown for selecting group */}
       {selectedComplex && (
-        <div className="group-dropdown">
-          <label htmlFor="group">Select Group:</label>
-          <select
-            id="group"
-            value={selectedGroup}
-            onChange={(e) => setSelectedGroup(e.target.value)}
-          >
-            <option value="">Select a Group</option>
-            {uniqueGroups.length > 0 ? (
-              uniqueGroups.map((group) => (
-                <option key={group} value={group}>
-                  {groupMapping[group] || 'Unknown Group'}
-                </option>
-              ))
-            ) : (
-              <option>No groups available</option>
-            )}
-          </select>
-        </div>
+        <TextField
+          select
+          label="Select Group"
+          value={selectedGroup}
+          onChange={(e) => setSelectedGroup(e.target.value)}
+          fullWidth
+          margin="normal"
+        >
+          <MenuItem value="">Select a Group</MenuItem>
+          {uniqueGroups.length > 0 ? (
+            uniqueGroups.map((group) => (
+              <MenuItem key={group} value={group}>
+                {groupMapping[group] || 'Unknown Group'}
+              </MenuItem>
+            ))
+          ) : (
+            <MenuItem>No groups available</MenuItem>
+          )}
+        </TextField>
       )}
 
       {/* Dropdown for selecting type */}
       {selectedComplex && (
-        <div className="type-dropdown">
-          <label htmlFor="type">Select Type:</label>
-          <select
-            id="type"
-            value={selectedType}
-            onChange={(e) => setSelectedType(e.target.value)}
-          >
-            <option value="">Select a Type</option>
-            {uniqueTypes.length > 0 ? (
-              uniqueTypes.map((type) => (
-                <option key={type} value={type}>
-                  {typeMapping[type] || 'Unknown Type'}
-                </option>
-              ))
-            ) : (
-              <option>No types available</option>
-            )}
-          </select>
-        </div>
+        <TextField
+          select
+          label="Select Type"
+          value={selectedType}
+          onChange={(e) => setSelectedType(e.target.value)}
+          fullWidth
+          margin="normal"
+        >
+          <MenuItem value="">Select a Type</MenuItem>
+          {uniqueTypes.length > 0 ? (
+            uniqueTypes.map((type) => (
+              <MenuItem key={type} value={type}>
+                {typeMapping[type] || 'Unknown Type'}
+              </MenuItem>
+            ))
+          ) : (
+            <MenuItem>No types available</MenuItem>
+          )}
+        </TextField>
       )}
 
-      
+      {/* Date Picker */}
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <DatePicker
+          label="Select Date"
+          value={selectedDate}
+          onChange={setSelectedDate}
+          minDate={new Date()} // Prevent past date selection
+          renderInput={(props) => <TextField {...props} fullWidth margin="normal" />}
+        />
+      </LocalizationProvider>
+
+      {/* Time Picker */}
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <TimePicker
+          label="Select Time"
+          value={selectedTime}
+          onChange={setSelectedTime}
+          renderInput={(props) => <TextField {...props} fullWidth margin="normal" />}
+        />
+      </LocalizationProvider>
 
       {/* Display the rate for the selected facility */}
       {selectedFacility && selectedGroup && selectedType && facilityRate !== null && (
@@ -245,12 +291,18 @@ const FacilityBookings = () => {
           </h3>
         </div>
       )}
+
+      {/* Submit Booking Button */}
+      <Button variant="contained" color="primary" onClick={handleBookingSubmit}>
+        Submit Booking
+      </Button>
     </div>
   );
 };
 
-
 export default FacilityBookings;
+
+
 
 
 
