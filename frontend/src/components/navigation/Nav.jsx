@@ -21,6 +21,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
+import EventIcon from '@mui/icons-material/Event';
 
 const Nav = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -90,6 +91,13 @@ const Nav = () => {
                             <DashboardIcon style={{ color: 'white' }} />
                         </ListItemIcon>
                         {isOpen && <ListItemText primary="Dashboard" style={{ color: 'white' }} />}
+                    </ListItem>
+                    <ListItem button component={NavLink} to="/booking" onClick={toggleDrawer}>
+                    
+                     <ListItemIcon>
+                         <DashboardIcon style={{ color: 'white' }} /> {/* Replace icon if needed */}
+                     </ListItemIcon>
+                     {isOpen && <ListItemText primary="Booking" style={{ color: 'white' }} />}
                     </ListItem>
 
                     {user && (

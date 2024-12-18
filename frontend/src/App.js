@@ -10,6 +10,7 @@ import ResetPasswordPage from "./pages/ResetPasswordPage"
 import ResetPasswordPageConfirm from "./pages/ResetPasswordPageConfirm";
 import ActivatePage from "./pages/ActivatePage";
 import NotFoundPage from "./pages/NotFoundPage";
+import Booking from "./pages/Booking";
 import './App.css';
 
 
@@ -29,6 +30,7 @@ function App() {
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/password/reset/confirm/:uid/:token" element={<ResetPasswordPageConfirm />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/booking" element={<Booking />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Router>
