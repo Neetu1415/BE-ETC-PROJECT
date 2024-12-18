@@ -370,6 +370,7 @@ img {
 
 /*.booking-section*/
 /* Container that wraps the whole form */
+/* Container that wraps the whole form */
 .dropdown-container {
   display: flex;
   flex-direction: column;
@@ -377,6 +378,7 @@ img {
   align-items: center;
   min-height: 100vh; /* Full viewport height */
   background-color: #f4f4f4; /* Optional background color */
+  padding: 20px; /* Add some padding for better spacing */
 }
 
 /* Title container */
@@ -397,10 +399,13 @@ select {
   padding: 10px;
   font-size: 1rem;
   margin: 10px 0;
-  width: 250px;
+  width: 250px; /* Explicit width to prevent stretching */
+  max-width: 100%; /* Prevent overflow on smaller screens */
   border: 1px solid #ccc;
   border-radius: 4px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: left; /* Align dropdown text to the left */
+  background-color: #fff; /* Optional to make it stand out */
 }
 
 /* Label styling */
@@ -434,6 +439,10 @@ select:focus {
   text-align: center;
   font-weight: bold;
 }
+
+
+
+
 
 
 
