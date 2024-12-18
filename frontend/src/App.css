@@ -368,6 +368,75 @@ img {
   background-color: #1f1f38; /* White */
 }
 
+/*.booking-section*/
+/* Container that wraps the whole form */
+.dropdown-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Full viewport height */
+  background-color: #f4f4f4; /* Optional background color */
+}
+
+/* Title container */
+.title-container {
+  margin-bottom: 20px;
+}
+
+/* Title styling */
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  color: #333;
+}
+
+/* Dropdown styles */
+select {
+  padding: 10px;
+  font-size: 1rem;
+  margin: 10px 0;
+  width: 250px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Label styling */
+label {
+  font-size: 1rem;
+  margin-bottom: 5px;
+  display: block;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Spacing between dropdowns */
+.facilities-dropdown, .group-dropdown, .type-dropdown {
+  margin-bottom: 20px;
+}
+
+/* Ensures dropdowns don't overlap */
+select:focus {
+  outline: none;
+  border-color: #007BFF;
+}
+
+/* Rate display styling */
+.rate-display {
+  background-color: #f0f0f0;  /* Light gray background */
+  color: black;  /* Black text */
+  padding: 10px;
+  margin-top: 20px;
+  font-size: 1.2em;
+  border-radius: 5px;
+  text-align: center;
+  font-weight: bold;
+}
+
+
+
 
 .booking-section {
   background-color: var(--color-bg-variant);
