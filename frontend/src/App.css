@@ -320,15 +320,11 @@ img {
 
 /* Dashboard Styles */
 /* Align title to the left */
-
-.title-container .title {
-  color: white !important;
-}
 .title {
   text-align: center;
   margin-bottom: 10px;
   font-size: 1.8rem;
-  color: white; /* Set title color to white for contrast */
+  color: #ffffff; /* Set title color to white for contrast */
 }
 .title-container {
   align-self: center; /* Align the title to the right independently */

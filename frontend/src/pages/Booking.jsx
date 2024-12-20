@@ -147,44 +147,24 @@ const FacilityBookings = () => {
   }, [selectedFacility, selectedGroup, selectedType, filteredBookings]);
 
   // Handle booking submission
-  const handleBookingSubmit = async () => {
+  const handleBookingSubmit = () => {
     if (selectedDate && selectedTime && selectedFacility && selectedGroup && selectedType) {
-      // Construct the booking payload
+      // Logic for submitting the booking, you can post this data to the server
       const bookingDetails = {
-        user_id: 1, // Replace this with the actual logged-in user ID
-        sports_complex: selectedComplex,
+        date: selectedDate,
+        time: selectedTime,
         facility: selectedFacility,
         group: selectedGroup,
         type: selectedType,
-        date: selectedDate.toISOString().split('T')[0], // Format date as YYYY-MM-DD
-        time: selectedTime.toTimeString().split(' ')[0], // Format time as HH:MM:SS
+        rate: facilityRate
       };
-  
-      try {
-        const response = await fetch("http://localhost:8000/facility_booking/create/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(bookingDetails),
-        });
-  
-        if (!response.ok) {
-          throw new Error("Booking failed. Please try again.");
-        }
-  
-        const result = await response.json();
-        alert(result.message); // Notify the user about success
-        console.log("Booking Response:", result);
-      } catch (error) {
-        console.error("Error submitting booking:", error);
-        alert("Failed to submit booking. Please check all details.");
-      }
+
+      console.log("Booking Details:", bookingDetails);
+      // Submit the booking (e.g., send a POST request)
     } else {
       alert("Please select all the required fields.");
     }
   };
-  
 
   return (
     <div className="dropdown-container">
