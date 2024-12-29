@@ -17,11 +17,13 @@ import './App.css';
 
 
 
+
 function App() {
   return (
     <>
       <Router>
         < Nav/>
+        <div style={{ paddingTop: '64px' }}>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
@@ -33,6 +35,7 @@ function App() {
           <Route path="/booking" element={<Booking />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
+        </div>
       </Router>
       <ToastContainer />
     </>
