@@ -36,16 +36,19 @@ class ChargeType(models.TextChoices):
 
 class Charges(models.Model):
     sports_complex = models.ForeignKey(Sports_complex, on_delete=models.CASCADE)
-    group = models.CharField(max_length=100, choices=GROUP_class.choices())  # Adjusted max_length
-    type = models.CharField(max_length=20, choices=ChargeType.choices)  # Adjusted max_length
-    rate = models.DecimalField(max_digits=10, decimal_places=2)  # Adjusted field name for clarity
+    group = models.CharField(max_length=100, choices=GROUP_class.choices())  
+    type = models.CharField(max_length=20, choices=ChargeType.choices)  
+    rate = models.DecimalField(max_digits=10, decimal_places=2) 
 
 
 class Booking(models.Model):
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)  # Fixed typo in CASCADE
-    sports_complex = models.ForeignKey(Sports_complex, on_delete=models.CASCADE)  # Fixed typo in CASCADE
-    booking_date = models.DateField()  # Clarified field name
-    booking_time = models.TimeField()  # Clarified field name
-    additional_info = models.CharField(max_length=200, blank=True, null=True)  # Allow blank and null
-    facility = models.CharField(max_length=100, choices=FACILITY_class.choices())  # Adjusted max_length
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    sports_complex = models.ForeignKey(Sports_complex, on_delete=models.CASCADE) 
+    booking_date = models.DateField()  
+    booking_time = models.TimeField()  
+    charges= models.ForeignKey(Charges, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.user.email} - {self.booking_date} {self.booking_time}"
+
 
