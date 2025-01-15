@@ -75,6 +75,19 @@ class BookingSerializer(serializers.ModelSerializer):
         if not charges:
             raise serializers.ValidationError("No matching Charges found for the given details.")
 
+        # Check for double booking
+        booking_date = validated_data.get("booking_date")
+        booking_time = validated_data.get("booking_time")
+
+        existing_booking = Booking.objects.filter(
+            sports_complex=sports_complex,
+            booking_date=booking_date,
+            booking_time=booking_time
+        ).exists()
+
+        if existing_booking:
+            raise serializers.ValidationError("This time slot is already booked.")
+
         # Add resolved user, sports_complex, and charges to validated data
         validated_data["user"] = user
         validated_data["sports_complex"] = sports_complex
