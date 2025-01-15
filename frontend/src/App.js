@@ -12,6 +12,7 @@ import ActivatePage from "./pages/ActivatePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import Booking from "./pages/Booking";
 import './App.css';
+import Booked from "./pages/Booked";
 
 
 
@@ -34,6 +35,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/booking" element={<Booking />} />
           <Route path="*" element={<NotFoundPage />} />
+          <Route path="/booked" element={<Booked />} />
         </Routes>
         </div>
       </Router>

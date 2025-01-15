@@ -368,7 +368,79 @@ img {
   background-color: #1f1f38; /* White */
 }
 
-/*.booking-section*/
+/*.booked-section*/
+
+/* General container for the booked slots */
+.booked-slots-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
+
+/* Heading styling */
+.booked-slots-container h2 {
+  font-size: 24px;
+  text-align: center;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+/* Table styling */
+.booked-slots-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  border: 1px solid #ddd;
+}
+
+/* Table header styling */
+.booked-slots-table th {
+  background-color: #444;
+  color: white;
+  padding: 12px 15px;
+  text-align: left;
+}
+
+/* Table cell styling */
+.booked-slots-table td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+/* Zebra-striping for table rows */
+
+
+/* Hover effect on table rows */
+.booked-slots-table tr:hover {
+  background-color: #007BFF;
+}
+
+/* No booked slots available message */
+.booked-slots-container p {
+  text-align: center;
+  font-size: 18px;
+  color: #888;
+  margin-top: 20px;
+}
+
+/* Loading message styling */
+.booked-slots-container p.loading {
+  font-size: 18px;
+  text-align: center;
+  color: #00A8E8;
+  margin-top: 20px;
+}
+
+/* Error message styling */
+.booked-slots-container p.error {
+  font-size: 18px;
+  text-align: center;
+  color: #e74c3c;
+  margin-top: 20px;
+}
+
 /* Container that wraps the whole form */
 /* Container that wraps the whole form */
 .dropdown-container {

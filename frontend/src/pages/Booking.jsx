@@ -51,7 +51,7 @@ const FacilityBookings = () => {
   const [facilityRate, setFacilityRate] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
-
+  const [bookedSlots, setBookedSlots] = useState([]);
   const dispatch = useDispatch();
   const { user, isAuthenticated, userInfo, token } = useSelector((state) => state.auth);
 
@@ -64,7 +64,52 @@ const FacilityBookings = () => {
     }
   }, [isAuthenticated, userInfo, token, dispatch]);
 
+  useEffect(() => {
+    // Fetch all bookings initially
+    const fetchBookings = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:8000/facility_booking/bookings/list/"
+        );
+        if (!response.ok) throw new Error("Network response was not ok");
+        const data = await response.json();
+        setBookings(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchBookings();
+  }, []);
   
+  useEffect(() => {
+    // Filter booked slots for the selected facility and date
+    const fetchBookedSlots = () => {
+      if (selectedFacility && selectedDate) {
+        const filteredSlots = bookings
+          .filter(
+            (booking) =>
+              booking.facility === selectedFacility &&
+              new Date(booking.date).toISOString().split("T")[0] ===
+                selectedDate.toISOString().split("T")[0]
+          )
+          .map((booking) => new Date(booking.booking_time));
+  
+        setBookedSlots(filteredSlots);
+      }
+    };
+    fetchBookedSlots();
+  }, [selectedFacility, selectedDate, bookings]);
+  
+  // Disable times already booked
+  const shouldDisableTime = (time) => {
+    return bookedSlots.some(
+      (bookedTime) =>
+        bookedTime.getHours() === time.getHours() &&
+        bookedTime.getMinutes() === time.getMinutes()
+    );
+  };
+  
+
   
 
 
@@ -143,21 +188,54 @@ const FacilityBookings = () => {
   }, []);
 
 
-  // Filter bookings based on selected sports complex and update unique values
-  useEffect(() => {
-    if (selectedComplex) {
-      const filtered = bookings.filter((booking) => booking.sports_complex_name === selectedComplex);
-      setFilteredBookings(filtered);
-      setUniqueFacilities([...new Set(filtered.map((booking) => booking.facility_type))]);
-      setUniqueGroups([...new Set(filtered.map((booking) => booking.group))]);
-      setUniqueTypes([...new Set(filtered.map((booking) => booking.type))]);
-    } else {
-      setFilteredBookings([]);
-      setUniqueFacilities([]);
-      setUniqueGroups([]);
-      setUniqueTypes([]);
-    }
-  }, [selectedComplex, bookings]);
+  // Filter bookings based on selected sports complex
+useEffect(() => {
+  if (selectedComplex) {
+    const filtered = bookings.filter((booking) => booking.sports_complex_name === selectedComplex);
+    setFilteredBookings(filtered);
+    setUniqueFacilities([...new Set(filtered.map((booking) => booking.facility_type))]);
+    setUniqueGroups([]);
+    setUniqueTypes([]);
+    setSelectedFacility('');
+    setSelectedGroup('');
+    setSelectedType('');
+  } else {
+    setFilteredBookings([]);
+    setUniqueFacilities([]);
+    setUniqueGroups([]);
+    setUniqueTypes([]);
+  }
+}, [selectedComplex, bookings]);
+
+// Filter groups based on selected facility
+useEffect(() => {
+  if (selectedFacility) {
+    const filtered = filteredBookings.filter((booking) => booking.facility_type === selectedFacility);
+    setUniqueGroups([...new Set(filtered.map((booking) => booking.group))]);
+    setUniqueTypes([]);
+    setSelectedGroup('');
+    setSelectedType('');
+  } else {
+    setUniqueGroups([]);
+    setUniqueTypes([]);
+  }
+}, [selectedFacility, filteredBookings]);
+
+// Filter types based on selected group
+useEffect(() => {
+  if (selectedGroup) {
+    const filtered = filteredBookings.filter(
+      (booking) =>
+        booking.facility_type === selectedFacility && booking.group === selectedGroup
+    );
+    setUniqueTypes([...new Set(filtered.map((booking) => booking.type))]);
+    setSelectedType('');
+  } else {
+    setUniqueTypes([]);
+  }
+}, [selectedGroup, selectedFacility, filteredBookings]);
+
+
 
   // Update rate when facility, group, or type is selected
   useEffect(() => {
@@ -237,7 +315,7 @@ const FacilityBookings = () => {
         <h2 className="title1">Facility Bookings</h2>
       </div>
 
-      {/* Dropdown for selecting sports complex */}
+      // Dropdown for selecting sports complex 
       <TextField
         select
         label="Select Sports Complex"
@@ -257,7 +335,7 @@ const FacilityBookings = () => {
           ))}
       </TextField>
 
-      {/* Dropdown for selecting a facility based on the selected complex */}
+      // Facility Dropdown 
       {selectedComplex && (
         <TextField
           select
@@ -268,20 +346,16 @@ const FacilityBookings = () => {
           margin="normal"
         >
           <MenuItem value="">Select a Facility</MenuItem>
-          {uniqueFacilities.length > 0 ? (
-            uniqueFacilities.map((facility) => (
-              <MenuItem key={facility} value={facility}>
-                {facilityMapping[facility] || 'Unknown Facility'}
-              </MenuItem>
-            ))
-          ) : (
-            <MenuItem>No facilities available</MenuItem>
-          )}
+          {uniqueFacilities.map((facility) => (
+            <MenuItem key={facility} value={facility}>
+              {facilityMapping[facility] || 'Unknown Facility'}
+            </MenuItem>
+          ))}
         </TextField>
       )}
 
-      {/* Dropdown for selecting group */}
-      {selectedComplex && (
+          // Group Dropdown 
+      {selectedFacility && (
         <TextField
           select
           label="Select Group"
@@ -291,20 +365,16 @@ const FacilityBookings = () => {
           margin="normal"
         >
           <MenuItem value="">Select a Group</MenuItem>
-          {uniqueGroups.length > 0 ? (
-            uniqueGroups.map((group) => (
-              <MenuItem key={group} value={group}>
-                {groupMapping[group] || 'Unknown Group'}
-              </MenuItem>
-            ))
-          ) : (
-            <MenuItem>No groups available</MenuItem>
-          )}
+          {uniqueGroups.map((group) => (
+            <MenuItem key={group} value={group}>
+              {groupMapping[group] || 'Unknown Group'}
+            </MenuItem>
+          ))}
         </TextField>
       )}
 
-      {/* Dropdown for selecting type */}
-      {selectedComplex && (
+      // Type Dropdown 
+      {selectedGroup && (
         <TextField
           select
           label="Select Type"
@@ -314,19 +384,15 @@ const FacilityBookings = () => {
           margin="normal"
         >
           <MenuItem value="">Select a Type</MenuItem>
-          {uniqueTypes.length > 0 ? (
-            uniqueTypes.map((type) => (
-              <MenuItem key={type} value={type}>
-                {typeMapping[type] || 'Unknown Type'}
-              </MenuItem>
-            ))
-          ) : (
-            <MenuItem>No types available</MenuItem>
-          )}
+          {uniqueTypes.map((type) => (
+            <MenuItem key={type} value={type}>
+              {typeMapping[type] || 'Unknown Type'}
+            </MenuItem>
+          ))}
         </TextField>
       )}
 
-      {/* Date Picker */}
+      // Date Picker 
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <DatePicker
           label="Select Date"
@@ -337,15 +403,18 @@ const FacilityBookings = () => {
         />
       </LocalizationProvider>
 
-      {/* Time Picker */}
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <TimePicker
-          label="Select Time"
-          value={selectedTime}
-          onChange={setSelectedTime}
-          renderInput={(props) => <TextField {...props} fullWidth margin="normal" />}
-        />
-      </LocalizationProvider>
+      // Time Picker 
+      {selectedDate && selectedFacility && (
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <TimePicker
+            label="Select Time"
+            value={selectedTime}
+            onChange={setSelectedTime}
+            shouldDisableTime={shouldDisableTime}
+            renderInput={(props) => <TextField {...props} fullWidth margin="normal" />}
+          />
+        </LocalizationProvider>
+      )}
 
       {/* Display the rate for the selected facility */}
       {selectedFacility && selectedGroup && selectedType && facilityRate !== null && (
@@ -366,8 +435,6 @@ const FacilityBookings = () => {
 };
 
 export default FacilityBookings;
-
-
 
 
 
