@@ -114,14 +114,33 @@ export const getUserInfo = createAsyncThunk(
 
 export const authSlice = createSlice({
     name: "auth",
-    initialState,
+    initialState:{
+        userInfo: JSON.parse(localStorage.getItem('userInfo')) || null, // You can store user info in localStorage and load it on app startup
+      },
+    
     reducers: {
         reset: (state) => {
             state.isLoading = false
             state.isError = false
             state.isSuccess = false
             state.message = false
-        }
+        },
+        login: (state, action) => {
+            state.userInfo = action.payload; // Assume user data contains tokens and user info
+            state.isSuccess = true;
+            localStorage.setItem('userInfo', JSON.stringify(action.payload)); // Store userInfo in localStorage
+        },
+        logout: (state) => {
+            state.user = null;
+            state.userInfo = null;
+            state.token = null ; //
+            state.isSuccess = false;
+            localStorage.removeItem('userInfo');
+        },
+        getUserInfo: (state, action) => {
+            state.userInfo = action.payload;
+        },
+        
     },
     extraReducers: (builder) => {
         builder
