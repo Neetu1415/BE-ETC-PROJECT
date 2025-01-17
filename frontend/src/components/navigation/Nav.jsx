@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout, reset } from '../../features/auth/authSlice';
+import { logout, reset , getUserInfo } from '../../features/auth/authSlice';
 import {
     Drawer,
     IconButton,
@@ -24,7 +24,13 @@ const Nav = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const { userInfo } = useSelector((state) => state.auth);
+    const { user,userInfo } = useSelector((state) => state.auth);
+
+    useEffect(() => {
+        if (user && !userInfo.email) {
+            dispatch(getUserInfo());
+        }
+    }, [user, userInfo, dispatch]);
 
     const handleLogout = () => {
         localStorage.removeItem("user");

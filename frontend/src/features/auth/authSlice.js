@@ -124,6 +124,8 @@ export const authSlice = createSlice({
             state.isError = false
             state.isSuccess = false
             state.message = false
+            state.user = null // Ensure user data is cleared on reset
+            state.userInfo = {} // Clear userInfo on reset
         }
     },
     extraReducers: (builder) => {
@@ -150,6 +152,7 @@ export const authSlice = createSlice({
                 state.isLoading = false
                 state.isSuccess = true
                 state.user = action.payload
+                
             })
             .addCase(login.rejected, (state, action) => {
                 state.isLoading = false
