@@ -1,6 +1,8 @@
+
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
-
+/* Reset all margins, paddings, and other default styles */
 * {
   margin: 0;
   padding: 0;
@@ -11,47 +13,42 @@
   text-decoration: none;
 }
 
+/* Set base colors and variables */
 :root {
-  --color-bg: #1f1f38;
-  --color-bg-variant: #28284f;
+  --color-bg: #ffffff; /* Change background color to white */
+  --color-bg-variant: #f0f0f0; /* Light gray for variant background */
   --color-primary: #007bff;
-  /* Blue */
   --color-primary-variant: #0056b3;
-  /* Darker Blue */
   --color-accent: #ff4500;
-  /* Orange-Red */
   --color-accent-variant: #cc3700;
-  /* Darker Orange-Red */
   --color-white: #fff;
   --color-light: #f8f8f8;
-  /* Light Gray */
-
   --transition: all 400ms ease;
-
   --container-width-lg: 75%;
   --container-width-md: 86%;
   --container-width-sm: 90%;
 }
 
+/* Hide scrollbar */
 ::-webkit-scrollbar {
   display: none;
 }
 
+/* Apply white background globally */
 body {
   font-family: 'Poppins', sans-serif;
   background: var(--color-bg);
-  color: var(--color-white);
+  color: var(--color-bg-variant);
   line-height: 1.7;
 }
 
-
-/* ============ GENERAL STYLES ============ */
-
+/* General styles for containers */
 .container {
   width: var(--container-width-lg);
   margin: 0 auto;
 }
 
+/* Headings styles */
 h1,
 h2,
 h3,
@@ -64,21 +61,23 @@ h1 {
   font-size: 2.5rem;
 }
 
+/* Section margins */
 section {
   margin-top: 8rem;
 }
 
-section>h2,
-section>h5 {
+section > h2,
+section > h5 {
   text-align: center;
   color: var(--color-light);
 }
 
-section>h2 {
+section > h2 {
   color: var(--color-primary);
   margin-bottom: 3rem;
 }
 
+/* Button styles */
 .text-light {
   color: var(--color-light);
 }
@@ -112,7 +111,7 @@ section>h2 {
   color: var(--color-white);
 }
 
-/* Additional styles for hover/focus effects */
+/* Hover effects for buttons */
 .btn:hover,
 .btn:focus {
   opacity: 0.8;
@@ -135,63 +134,53 @@ section>h2 {
   background-color: var(--color-accent-variant);
 }
 
-
+/* Image display */
 img {
   display: block;
   width: 100%;
   object-fit: cover;
 }
 
+/* ==================== HOME PAGE ==================== */
 
-
-/* ============ MEDIA QUERIES (MEDIUM DEVICES) ============ */
-
-@media screen and (max-width: 1024px) {
-  .container {
-    width: var(--container-width-md);
-  }
-
-  section {
-    margin-top: 6rem;
-  }
-}
-
-
-/* ============ MEDIA QUERIES (SMALL DEVICES) ============ */
-
-@media screen and (max-width: 600px) {
-  .container {
-    width: var(--container-width-sm);
-  }
-
-  section>h2 {
-    margin-bottom: 2rem;
-  }
-}
-
-
-/* ============ HOME PAGE ============ */
+/* ==================== HOME PAGE ==================== */
 
 
 .main__title {
   font-size: 3rem;
   color: var(--color-primary);
   text-align: center;
-  margin-top: 4rem;
+  margin-top: 2rem;
 
   @media screen and (min-width: 1200px) {
     font-size: 5rem;
-    margin-top: 6rem;
+    margin-top: 4rem;
   }
-
 }
 
+/* Main container styling with increased height, border, padding, and margin */
+.home-page__container {
+  border: 4px solid #007bff; /* Increased border thickness */
+  border-radius: 15px; /* Optional: more rounded corners */
+  padding: 5rem; /* Increased padding inside the container */
+  max-width: 600px; /* Slightly larger container width */
+  margin: 7rem auto; /* Increased margin to create more space around the container */
+  min-height: 400px; /* Increased minimum height */
+  background-color: #f9f9f9; /* Optional: light background for the container */
+  text-align: center; /* Align content in the center */
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.15); /* Enhanced shadow for more depth */
+  display: flex; /* Center content vertically */
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Add border for home page buttons */
 .home__buttons {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 2rem;
-  margin-top: 20rem;
+  margin-top: 3rem; /* Adjust spacing for buttons */
 
   @media screen and (min-width: 1200px) {
     .btn {
@@ -199,17 +188,49 @@ img {
     }
 
     gap: 7rem;
-    margin-top: 15rem;
+    margin-top: 4rem;
   }
+}
+
+/* Add border to Login and Signup links */
+.home__buttons .btn-signin, 
+.home__buttons .btn-signup {
+  border: 2px solid #007bff; /* Add border to buttons */
+  padding: 14px 28px; /* Slightly larger padding for buttons */
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 5px; /* Optional: more rounded corners for buttons */
+  transition: var(--transition);
+}
+
+/* Hover effects for Login and Signup buttons */
+.home__buttons .btn-signin:hover {
+  background-color: var(--color-primary);
+  color: var(--color-white); /* Change color on hover */
+}
+
+.home__buttons .btn-signup:hover {
+  background-color: var(--color-primary-variant);
+  color: var(--color-white);
+}
+
+/* Button styles */
+.btn-primary {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.btn-secondary {
+  background-color: #fff;
+  color: #007bff;
+  border: 2px solid #007bff;
 }
 
 
 
-/* ============ NAV ============ */
+/* ==================== NAV ==================== */
 
-
-/* Base styles for the navigation bar */
-/*
+/* Navigation base styles */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -251,12 +272,10 @@ img {
   color: var(--color-white);
 }
 
-*/
-
-/* ============ Auth pages (Login, Register, Reset) ============ */
+/* ==================== AUTH PAGES ==================== */
 
 .auth__form {
-  background-color: var(--color-bg-variant);
+  background-color: #0d3ce43a;
   margin: auto;
   padding: 30px;
   border-radius: 5px;
@@ -276,68 +295,27 @@ img {
   border: none;
   border-radius: 3px;
   background-color: var(--color-light);
-  color: var(--color-bg-variant);
-
-  &::placeholder {
-    font-size: 1rem;
-    color: var(--color-bg-variant);
-  }
-
-  &:valid {
-    font-size: 1rem;
-    color: var(--color-bg-variant);
-  }
+  color: #000;
 }
 
-
-.auth__container .main__title {
+.auth_container .main_title {
   font-size: 3rem;
-
-  @media screen and (min-width: 1200px) {
-    margin: 3rem 0;
-  }
 }
+/* ==================== Dashboard and Tables ==================== */
 
-.auth__container .main__title {
-  font-size: 3rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.auth__container .main__title svg {
-  margin-left: 10px;
-  /* Add some space between the icon and the text */
-}
-
-.btn-activate-account {
-  margin: auto;
-  display: block;
-  margin-top: 5rem;
-  font-size: 2rem;
-  padding: 2rem;
-}
-
-/* Dashboard Styles */
-/* Align title to the left */
 .title {
   text-align: center;
   margin-bottom: 10px;
   font-size: 1.8rem;
-  color: #ffffff !important; /* Set title color to white for contrast */
+  color: #000000 !important;
 }
-.title-container {
-  align-self: center; /* Align the title to the right independently */
-  margin-bottom: 10px;
-}
-/* Table Container */
-/* Table Styling */
+
 .table-container {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 64px; /* Adjust for AppBar height */
+  margin-top: 64px;
 }
 
 .facility-table {
@@ -348,117 +326,113 @@ img {
 
 .facility-table th,
 .facility-table td {
-  border: 2px solid #444; /* Thick borders */
+  border: 2px solid #444;
   padding: 10px;
   text-align: center;
-  
+  color: #000; /* Set text color to black */
 }
 
 .facility-table th {
-  background-color: #1f1f38;
+  background-color: #fff;
   font-weight: bold;
 }
 
-/* Alternate row colors */
 .facility-table tr:nth-child(even) {
-  background-color: #1f1f38; /* Light gray */
+  background-color: #f0f0f0;
 }
 
 .facility-table tr:nth-child(odd) {
-  background-color: #1f1f38; /* White */
+  background-color: #ffffff;
 }
 
-/*.booked-section*/
-
-/* General container for the booked slots */
+/* ==================== Booked Slots ==================== */
 .booked-slots-container {
   padding: 20px;
   max-width: 1200px;
-  margin: 0 auto;
+  margin-bottom: 20px;
   font-family: Arial, sans-serif;
 }
 
-/* Heading styling */
 .booked-slots-container h2 {
   font-size: 24px;
   text-align: center;
-  color: #fff;
+  color: #000;
   margin-bottom: 20px;
 }
 
-/* Table styling */
 .booked-slots-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
-  border: 1px solid #ddd;
+  border: 1px solid #dddddde2;
 }
 
-/* Table header styling */
-.booked-slots-table th {
-  background-color: #444;
-  color: white;
-  padding: 12px 15px;
-  text-align: left;
-}
-
-/* Table cell styling */
+.booked-slots-table th,
 .booked-slots-table td {
   padding: 12px 15px;
   border: 1px solid #ddd;
   text-align: left;
+  color: #000; /* Set text color to black */
 }
 
-/* Zebra-striping for table rows */
-
-
-/* Hover effect on table rows */
 .booked-slots-table tr:hover {
-  background-color: #007BFF;
+  background-color: #007bff58;
 }
 
-/* No booked slots available message */
 .booked-slots-container p {
   text-align: center;
   font-size: 18px;
   color: #888;
-  margin-top: 20px;
 }
 
-/* Loading message styling */
 .booked-slots-container p.loading {
   font-size: 18px;
   text-align: center;
   color: #00A8E8;
-  margin-top: 20px;
 }
 
-/* Error message styling */
 .booked-slots-container p.error {
   font-size: 18px;
   text-align: center;
-  color: #e74c3c;
+  color: #e74c3c !important; /* Bright red text for error */
+  font-weight: bold; /* Make error message more prominent */
+  padding: 12px;
+  background-color: #f8d7da; /* Light red background */
+  border: 1px solid #e74c3c; /* Red border to distinguish error */
+  border-radius: 5px; /* Rounded corners */
   margin-top: 20px;
+  width: 100%;
+  box-sizing: border-box; /* To avoid overflow */
+  display: inline-block; /* Ensure the box takes up only as much space as needed */
 }
 
-/* Container that wraps the whole form */
-/* Container that wraps the whole form */
+/* Ensure all text is black unless it's explicitly overridden */
+.booked-slots-container p {
+  color: #000 !important; /* Override the light gray color for any p tag */
+}
+
+/* Additional styles if needed to make text stand out more globally */
+body {
+  color: #000; /* Ensure text color for the body is black unless otherwise specified */
+}
+
+
+/* ==================== Dropdown Container ==================== */
+
 .dropdown-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* Full viewport height */
-  background-color: #f4f4f4; /* Optional background color */
-  padding: 20px; /* Add some padding for better spacing */
+  min-height: 100vh;
+  background-color: #f4f4f4;
+  padding: 20px;
 }
 
-/* Title container */
 .title-container {
   margin-bottom: 20px;
 }
 
-/* Title styling */
 .title1 {
   font-size: 2rem;
   font-weight: bold;
@@ -466,44 +440,24 @@ img {
   color: #333;
 }
 
-/* Dropdown styles */
 select {
   padding: 10px;
   font-size: 1rem;
   margin: 10px 0;
-  width: 250px; /* Explicit width to prevent stretching */
-  max-width: 100%; /* Prevent overflow on smaller screens */
+  width: 250px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  text-align: left; /* Align dropdown text to the left */
-  background-color: #fff; /* Optional to make it stand out */
 }
 
-/* Label styling */
-label {
-  font-size: 1rem;
-  margin-bottom: 5px;
-  display: block;
-  font-weight: bold;
-  color: #333;
-}
-
-/* Spacing between dropdowns */
-.facilities-dropdown, .group-dropdown, .type-dropdown {
-  margin-bottom: 20px;
-}
-
-/* Ensures dropdowns don't overlap */
 select:focus {
   outline: none;
   border-color: #007BFF;
 }
 
-/* Rate display styling */
+/* Rate display */
 .rate-display {
-  background-color: #f0f0f0;  /* Light gray background */
-  color: black;  /* Black text */
+  background-color: #f0f0f0;
+  color: black;
   padding: 10px;
   margin-top: 20px;
   font-size: 1.2em;
@@ -512,18 +466,7 @@ select:focus {
   font-weight: bold;
 }
 
-
-
-
-
-
-
-
-
-/* ============ COMPONENTS ============ */
-
-
-/* ============ Spinner ============ */
+/* ==================== Spinner ==================== */
 
 .spinner-container {
   display: flex;
@@ -544,7 +487,6 @@ select:focus {
   0% {
     transform: rotate(0deg);
   }
-
   100% {
     transform: rotate(360deg);
   }
