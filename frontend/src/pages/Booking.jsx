@@ -262,9 +262,16 @@ useEffect(() => {
       return new Intl.DateTimeFormat('en-IN', options).format(date);
     };
 
+    const formatToLocalDate = (date) => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0'); // Month is zero-based
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+
     // Construct booking details to match the backend serializer expectations
     const bookingDetails = {
-      booking_date: selectedDate.toISOString().split("T")[0],
+      booking_date: formatToLocalDate(selectedDate), 
       booking_time: formatToIST(selectedTime), // Send time in IST format
       sports_complex_name: selectedComplex, // Corrected to use the sports complex name
       facility_type: selectedFacility,
