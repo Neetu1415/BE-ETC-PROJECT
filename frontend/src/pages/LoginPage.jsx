@@ -29,33 +29,33 @@ const LoginPage = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const userData = {
       email,
       password,
     };
-    dispatch(login(userData));
+
+    try {
+      const loginResult = await dispatch(login(userData)).unwrap(); // Dispatch the login action and wait for it to resolve
+      if (loginResult) {
+        // If login succeeds, fetch user info
+        dispatch(getUserInfo());
+        toast.success("Login successful!");
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      toast.error("Login failed. Please check your credentials.");
+    } finally {
+      dispatch(reset());
+    }
   };
 
   useEffect(() => {
     if (isError) {
       toast.error(message);
     }
-
-    if (isSuccess || user) {
-      // Store the tokens in localStorage if available
-      if (user?.access && user?.refresh) {
-        localStorage.setItem("access_token", user.access);
-        localStorage.setItem("refresh_token", user.refresh);
-        toast.success("Login successful!");
-      }
-      navigate("/dashboard");
-    }
-
-    dispatch(reset());
-    dispatch(getUserInfo());
-  }, [isError, isSuccess, user, navigate, dispatch]);
+  }, [isError, message]);
 
   return (
     <>
