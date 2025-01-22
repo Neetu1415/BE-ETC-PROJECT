@@ -173,6 +173,26 @@ const FacilityBookings = () => {
     OO: 'open field outdoor',
   };
 
+  const complexMapping={
+    P : 'PEDDEM SPORTS COMPLEX',
+    A : 'ATHLETIC STADIUM BAMBOLIM',
+    MP :'MULTIPURPOSE INDOOR STADIUM (PEDDEM)',
+    SP :'DR SHYAMA PRASAD MUKHERJEE INDOOR STADIUM',
+    MC :'MULTIPURPOSE INDOOR CAMPAL',
+    MN : 'MANOHAR PARRIKAR INDOOR STADIUM NAVELIM',
+    MF : 'MULTIPURPOSE HALL FATORDA',
+    IP : 'INDOOR HALL PONDA / SPORTS COMPLEX PONDA',
+    SF : 'SWIMMING POOL FATORDA',
+    AG : 'ASSOLNA GROUND',
+    TM : 'TILAK MAIDAN',
+    AC : 'AGONDA SPORTS COMPLEX',
+    BG : 'BENAULIM GROUND',
+    UG : 'UTORGA GROUND',
+    FM :'FATORDA MULTIPURPOSE INDOOR STADIUM',
+    PF : 'PJN STADIUM FATORDA',
+    FC : 'FATORDA OPEN SPORTS COMPLEX'
+  }
+
   // Fetch data with async/await
   useEffect(() => {
     const fetchBookings = async () => {
@@ -339,7 +359,7 @@ useEffect(() => {
           .filter((value, index, self) => self.indexOf(value) === index) // Remove duplicates
           .map((complex, index) => (
             <MenuItem key={index} value={complex}>
-              {complex}
+              {complexMapping[complex] || complex}
             </MenuItem>
           ))}
       </TextField>

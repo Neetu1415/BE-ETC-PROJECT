@@ -50,6 +50,7 @@ const RegisterPage = () => {
             last_name,
             email,
             password,
+            re_password,
         };
 
         dispatch(register(userData));
