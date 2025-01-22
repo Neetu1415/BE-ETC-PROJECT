@@ -49,4 +49,4 @@ class Sports_complex(models.Model):
     facility=models.CharField(max_length=8, choices=FACILITY_class.choices(),blank=True,null=True)
     def _str_(self):
 #        label= self.course_code + ' ' + self.course_name
-        return uid + FACILITY_class[self.facility].value
+        return [self.uid] + FACILITY_class[self.facility].value
