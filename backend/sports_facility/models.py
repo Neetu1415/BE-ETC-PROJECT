@@ -40,12 +40,36 @@ class FACILITY_class(Enum):
     @classmethod
     def choices(cls):
         return [(key.name, key.value) for key in cls]
+    
+class COMPLEX_class(Enum):
+    P = 'PEDDEM SPORTS COMPLEX'
+    A = 'ATHLETIC STADIUM BAMBOLIM'
+    MP = 'MULTIPURPOSE INDOOR STADIUM (PEDDEM)'
+    SP = 'DR SHYAMA PRASAD MUKHERJEE INDOOR STADIUM'
+    MC = 'MULTIPURPOSE INDOOR CAMPAL'
+    MN = 'MANOHAR PARRIKAR INDOOR STADIUM NAVELIM'
+    MF = 'MULTIPURPOSE HALL FATORDA'
+    IP = 'INDOOR HALL PONDA / SPORTS COMPLEX PONDA'
+    SF = 'SWIMMING POOL FATORDA'
+    AG = 'ASSOLNA GROUND'
+    TM = 'TILAK MAIDAN'
+    AC = 'AGONDA SPORTS COMPLEX'
+    BG = 'BENAULIM GROUND'
+    UG = 'UTORGA GROUND'
+    FM ='FATORDA MULTIPURPOSE INDOOR STADIUM'
+    PF = 'PJN STADIUM FATORDA'
+    FC = 'FATORDA OPEN SPORTS COMPLEX'
+
+    
+    @classmethod
+    def choices(cls):
+        return [(key.name, key.value) for key in cls]
 
 
 
 class Sports_complex(models.Model):
     uid=models.CharField(max_length=2,blank=True,null=True)
-    name=models.CharField(max_length=200,blank=True,null=True)
+    name=models.CharField(max_length=8, choices=COMPLEX_class.choices(),blank=True,null=True)
     facility=models.CharField(max_length=8, choices=FACILITY_class.choices(),blank=True,null=True)
     def _str_(self):
 #        label= self.course_code + ' ' + self.course_name
