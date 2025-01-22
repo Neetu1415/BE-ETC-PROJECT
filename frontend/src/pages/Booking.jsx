@@ -54,6 +54,7 @@ const FacilityBookings = () => {
   const [bookedSlots, setBookedSlots] = useState([]);
   const dispatch = useDispatch();
   const { user, isAuthenticated, userInfo, token } = useSelector((state) => state.auth);
+  const [errorInfo, setErrorInfo] = useState(""); // State to hold error messages
 
   const userEmail = user?.email || userInfo?.email || "Email not available";
 
@@ -253,7 +254,7 @@ useEffect(() => {
   // Handle booking submission
   const handleBookingSubmit = async () => {
     if (!selectedDate || !selectedTime || !selectedFacility || !selectedGroup || !selectedType) {
-      alert("Please select all required fields.");
+      setErrorInfo("Please select all required fields.");
       return;
     }
     
@@ -303,10 +304,11 @@ useEffect(() => {
         const result = await response.json();
         alert('Booking submitted successfully!');
         console.log('Booking response:', result);
+        setErrorInfo(""); // Clear error information
       } else {
         const error = await response.json();
         console.error('Error submitting booking:', error);
-        alert('Failed to submit booking. Check the input and try again.');
+        setErrorInfo(error);
       }
     } catch (error) {
       console.error('Error submitting booking:', error);
@@ -322,7 +324,7 @@ useEffect(() => {
         <h2 className="title1">Facility Bookings</h2>
       </div>
 
-      // Dropdown for selecting sports complex 
+      {/* sports complex dropdown */} 
       <TextField
         select
         label="Select Sports Complex"
@@ -342,7 +344,7 @@ useEffect(() => {
           ))}
       </TextField>
 
-      // Facility Dropdown 
+      {/* facility dropdown */}
       {selectedComplex && (
         <TextField
           select
@@ -361,7 +363,7 @@ useEffect(() => {
         </TextField>
       )}
 
-          // Group Dropdown 
+        {/* group dropdown */}
       {selectedFacility && (
         <TextField
           select
@@ -380,7 +382,7 @@ useEffect(() => {
         </TextField>
       )}
 
-      // Type Dropdown 
+      {/* Type dropdown */}
       {selectedGroup && (
         <TextField
           select
@@ -399,7 +401,7 @@ useEffect(() => {
         </TextField>
       )}
 
-      // Date Picker 
+      {/* Date Picker*/ }
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <DatePicker
           label="Select Date"
@@ -410,7 +412,7 @@ useEffect(() => {
         />
       </LocalizationProvider>
 
-      // Time Picker 
+      {/* Time Picker */}
       {selectedDate && selectedFacility && (
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <TimePicker
@@ -430,6 +432,13 @@ useEffect(() => {
             Rate for {facilityMapping[selectedFacility]} ({groupMapping[selectedGroup]} - {typeMapping[selectedType]}):
             ₹{facilityRate}
           </h3>
+        </div>
+      )}
+
+      
+      {errorInfo && (
+        <div className="error-info" style={{ color: 'red', marginTop: '10px' }}>
+          {errorInfo}
         </div>
       )}
 
