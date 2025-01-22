@@ -20,9 +20,15 @@ const register = async (userData) => {
         }
     }
 
-    const response = await axios.post(REGISTER_URL, userData, config)
+    try {
+        const response = await axios.post(REGISTER_URL, userData, config);
+        return response.data;
+    } catch (error) {
+        console.error("Registration failed:", error.response?.data || error.message);
+        throw error; // Re-throw to handle elsewhere
+    }
 
-    return response.data
+    
 }
 
 // Login user
