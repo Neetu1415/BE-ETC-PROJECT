@@ -74,3 +74,6 @@ class Sports_complex(models.Model):
     def _str_(self):
 #        label= self.course_code + ' ' + self.course_name
         return [self.uid] + FACILITY_class[self.facility].value
+    
+    class Meta:
+        verbose_name_plural = "Sports complexes"

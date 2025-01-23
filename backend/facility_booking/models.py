@@ -27,7 +27,8 @@ class GROUP_class(Enum):
 
 
 class ChargeType(models.TextChoices):
-    D = 'DAILY', 
+    HD = 'HALF DAY', 
+    FD = 'FULL DAY',
     M = 'MONTHLY', 
     HP = 'HOURLY PASS', 
     Q = 'QUARTERLY', 
@@ -41,6 +42,9 @@ class Charges(models.Model):
     group = models.CharField(max_length=100, choices=GROUP_class.choices())  
     type = models.CharField(max_length=20, choices=ChargeType.choices)  
     rate = models.DecimalField(max_digits=10, decimal_places=2) 
+    class Meta:
+        verbose_name_plural = "Charges"
+    
 
 
 class Booking(models.Model):
