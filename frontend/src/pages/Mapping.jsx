@@ -14,7 +14,8 @@ export const groupMapping = {
   };
   
   export const typeMapping = {
-    D: 'DAILY',
+    HD: 'HALF DAY',
+    FD: 'FULL DAY',
     M: 'MONTHLY',
     HP: 'HOURLY PASS',
     Q: 'QUARTERLY',
