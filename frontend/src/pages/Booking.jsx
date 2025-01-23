@@ -7,6 +7,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { getUserInfo } from "../features/auth/authSlice"; 
 import { groupMapping, typeMapping, facilityMapping, complexMapping } from './Mapping';
+
 // Helper function for refreshing access tokens
 const refreshAccessToken = async () => {
   const refreshToken = localStorage.getItem('refresh_token');
@@ -359,7 +360,13 @@ useEffect(() => {
             value={selectedTime}
             onChange={setSelectedTime}
             shouldDisableTime={shouldDisableTime}
+            minTime={new Date().setHours(9, 0, 0)} // Set minimum time to 9:00 AM
+            maxTime={new Date().setHours(18, 0, 0)} // Set maximum time to 6:00 PM
+            views={['hours']} // Include only hours and minutes in the picker
+            ampm={false} // Use 24-hour format
             renderInput={(props) => <TextField {...props} fullWidth margin="normal" />}
+            minutesStep={60} // Step interval of 60 minutes
+            
           />
         </LocalizationProvider>
       )}
