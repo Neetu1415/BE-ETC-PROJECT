@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import {  facilityMapping, complexMapping } from './Mapping';
 
 const Booked = () => {
   const [bookedSlots, setBookedSlots] = useState([]);
@@ -19,13 +20,14 @@ const Booked = () => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`, // Use backticks for template literals
+            Authorization: `Bearer ${token}`, 
           },
         });
 
         if (!response.ok) {
-          throw new Error('Failed to fetch booked slots. Status: ${response.status}');
+          throw new Error(`Failed to fetch booked slots. Status: ${response.status}`);
         }
+        
 
         const data = await response.json();
         console.log('Fetched Booked Slots:', data); // Debug response
@@ -66,8 +68,8 @@ const Booked = () => {
                 <td>{slot.user_email}</td>
                 <td>{slot.booking_date}</td>
                 <td>{slot.booking_time}</td>
-                <td>{slot.sports_complex}</td>
-                <td>{slot.facility_type}</td>
+                <td>{complexMapping[slot.sports_complex] || 'Unknown Complex'}</td>
+                <td>{facilityMapping[slot.facility_type] || 'Unknown Facility'}</td>
               </tr>
             ))}
           </tbody>
