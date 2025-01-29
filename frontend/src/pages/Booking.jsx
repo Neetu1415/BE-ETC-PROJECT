@@ -94,8 +94,11 @@ const FacilityBookings = () => {
               new Date(booking.date).toISOString().split("T")[0] ===
                 selectedDate.toISOString().split("T")[0]
           )
-          .map((booking) => new Date(booking.booking_time));
-  
+          .map((booking) => {
+            // Combine booking.date and booking.booking_time into a full datetime string
+            const dateTimeString = `${booking.date}T${booking.booking_time}`;
+            return new Date(dateTimeString);
+          });
         setBookedSlots(filteredSlots);
       }
     };
@@ -244,6 +247,11 @@ useEffect(() => {
         const result = await response.json();
         alert('Booking submitted successfully!');
         console.log('Booking response:', result);
+        
+        // Add the newly booked time to the list of booked slots
+        const newBookedTime = new Date(bookingDetails.booking_date + ' ' + bookingDetails.booking_time);
+        setBookedSlots((prevSlots) => [...prevSlots, newBookedTime]);
+
         setErrorInfo(""); // Clear error information
       } else {
         const error = await response.json();
