@@ -56,7 +56,7 @@ const FacilityBookings = () => {
   const dispatch = useDispatch();
   const { user, isAuthenticated, userInfo, token } = useSelector((state) => state.auth);
   const [errorInfo, setErrorInfo] = useState(""); // State to hold error messages
-
+  const [charges, setCharges] = useState([]);
   const userEmail = user?.email || userInfo?.email || "Email not available";
 
   // Fetch user info if not already loaded
@@ -118,17 +118,17 @@ const FacilityBookings = () => {
   
   // Fetch data with async/await
   useEffect(() => {
-    const fetchBookings = async () => {
+    const fetchCharges = async () => {
       try {
         const response = await fetch('http://localhost:8000/facility_booking/charges/');
         if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         setBookings(data);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching charges:', error);
       }
     };
-    fetchBookings();
+    fetchCharges();
   }, []);
 
 
@@ -184,15 +184,15 @@ useEffect(() => {
   // Update rate when facility, group, or type is selected
   useEffect(() => {
     if (selectedFacility && selectedGroup && selectedType) {
-      const selectedBooking = filteredBookings.find(
-        (booking) =>
-          booking.facility_type === selectedFacility &&
-          booking.group === selectedGroup &&
-          booking.type === selectedType
+      const selectedCharge = filteredBookings.find(
+        (charges) =>
+          charges.facility_type === selectedFacility &&
+          charges.group === selectedGroup &&
+          charges.type === selectedType
       );
-      setFacilityRate(selectedBooking?.rate || null);
+      setFacilityRate(selectedCharge?.rate || null);
     }
-  }, [selectedFacility, selectedGroup, selectedType, filteredBookings]);
+  }, [selectedFacility, selectedGroup, selectedType, charges]);
 
   // Handle booking submission
   const handleBookingSubmit = async () => {
