@@ -42,6 +42,7 @@ const refreshAccessToken = async () => {
 const FacilityBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [selectedComplex, setSelectedComplex] = useState('');
+  const [uniqueComplexes, setUniqueComplexes] = useState([]);
   const [filteredBookings, setFilteredBookings] = useState([]);
   const [uniqueFacilities, setUniqueFacilities] = useState([]);
   const [uniqueGroups, setUniqueGroups] = useState([]);
@@ -67,77 +68,70 @@ const FacilityBookings = () => {
   }, [isAuthenticated, userInfo, token, dispatch]);
 
   useEffect(() => {
-    // Fetch all bookings initially
-    const fetchBookings = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:8000/facility_booking/bookings/list/"
-        );
-        if (!response.ok) throw new Error("Network response was not ok");
-        const data = await response.json();
-        setBookings(Array.isArray(data) ? data : []);
+        // Fetch charges for dropdown options
+        const chargesResponse = await fetch('http://localhost:8000/facility_booking/charges/');
+        if (!chargesResponse.ok) throw new Error('Failed to fetch charges');
+        const chargesData = await chargesResponse.json();
+        setCharges(Array.isArray(chargesData) ? chargesData : []);
+        
+        // Fetch bookings for availability checks
+        const bookingsResponse = await fetch("http://localhost:8000/facility_booking/bookings/list/");
+        if (!bookingsResponse.ok) throw new Error("Failed to fetch bookings");
+        const bookingsData = await bookingsResponse.json();
+        setBookings(Array.isArray(bookingsData) ? bookingsData : []);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-    fetchBookings();
+    fetchData();
   }, []);
+
+   // Extract unique complexes from charges
+   useEffect(() => {
+    const complexes = [...new Set(charges.map(charge => charge.sports_complex_name))];
+    setUniqueComplexes(complexes);
+  }, [charges]);
+  
+
   
   useEffect(() => {
-    // Filter booked slots for the selected facility and date
-    const fetchBookedSlots = () => {
-      if (selectedFacility && selectedDate) {
-        const filteredSlots = bookings
-          .filter(
-            (booking) =>
-              booking.facility === selectedFacility &&
-              new Date(booking.date).toISOString().split("T")[0] ===
-                selectedDate.toISOString().split("T")[0]
-          )
-          .map((booking) => {
-            // Combine booking.date and booking.booking_time into a full datetime string
-            const dateTimeString = `${booking.date}T${booking.booking_time}`;
-            return new Date(dateTimeString);
-          });
-        setBookedSlots(filteredSlots);
-      }
-    };
-    fetchBookedSlots();
-  }, [selectedFacility, selectedDate, bookings]);
-  
-  // Disable times already booked
+    if (selectedFacility && selectedDate) {
+      const selectedDateStr = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
+      const slots = bookings
+        .filter(booking => 
+          booking.facility_type === selectedFacility &&
+          booking.sports_complex_name === selectedComplex &&
+          booking.date === selectedDateStr
+        )
+        .map(booking => new Date(`${booking.date}T${booking.booking_time}`));
+      setBookedSlots(slots);
+    }
+  }, [selectedFacility, selectedComplex, selectedDate, bookings]);
+
   const shouldDisableTime = (time) => {
     return bookedSlots.some(
-      (bookedTime) =>
+      bookedTime => 
         bookedTime.getHours() === time.getHours() &&
         bookedTime.getMinutes() === time.getMinutes()
     );
   };
-  
+
 
   
-  // Fetch data with async/await
-  useEffect(() => {
-    const fetchCharges = async () => {
-      try {
-        const response = await fetch('http://localhost:8000/facility_booking/charges/');
-        if (!response.ok) throw new Error('Network response was not ok');
-        const data = await response.json();
-        setBookings(data);
-      } catch (error) {
-        console.error('Error fetching charges:', error);
-      }
-    };
-    fetchCharges();
-  }, []);
 
 
   // Filter bookings based on selected sports complex
 useEffect(() => {
   if (selectedComplex) {
-    const filtered = bookings.filter((booking) => booking.sports_complex_name === selectedComplex);
-    setFilteredBookings(filtered);
-    setUniqueFacilities([...new Set(filtered.map((booking) => booking.facility_type))]);
+
+    const facilities = [...new Set(
+      charges
+        .filter(charge => charge.sports_complex_name === selectedComplex)
+        .map(charge => charge.facility_type)
+    )];
+    setUniqueFacilities(facilities);  
     setUniqueGroups([]);
     setUniqueTypes([]);
     setSelectedFacility('');
@@ -149,13 +143,21 @@ useEffect(() => {
     setUniqueGroups([]);
     setUniqueTypes([]);
   }
-}, [selectedComplex, bookings]);
+}, [selectedComplex, charges]);
 
 // Filter groups based on selected facility
 useEffect(() => {
   if (selectedFacility) {
-    const filtered = filteredBookings.filter((booking) => booking.facility_type === selectedFacility);
-    setUniqueGroups([...new Set(filtered.map((booking) => booking.group))]);
+    
+    const groups = [...new Set(
+      charges
+        .filter(charge => 
+          charge.sports_complex_name === selectedComplex &&
+          charge.facility_type === selectedFacility
+        )
+        .map(charge => charge.group)
+    )];
+    setUniqueGroups(groups);
     setUniqueTypes([]);
     setSelectedGroup('');
     setSelectedType('');
@@ -163,36 +165,41 @@ useEffect(() => {
     setUniqueGroups([]);
     setUniqueTypes([]);
   }
-}, [selectedFacility, filteredBookings]);
+}, [selectedFacility,selectedComplex, charges]);
 
 // Filter types based on selected group
 useEffect(() => {
   if (selectedGroup) {
-    const filtered = filteredBookings.filter(
-      (booking) =>
-        booking.facility_type === selectedFacility && booking.group === selectedGroup
-    );
-    setUniqueTypes([...new Set(filtered.map((booking) => booking.type))]);
+    const types = [...new Set(
+      charges
+        .filter(charge => 
+          charge.sports_complex_name === selectedComplex &&
+          charge.facility_type === selectedFacility &&
+          charge.group === selectedGroup
+        )
+        .map(charge => charge.type)
+    )];
+    setUniqueTypes(types);
     setSelectedType('');
   } else {
     setUniqueTypes([]);
   }
-}, [selectedGroup, selectedFacility, filteredBookings]);
+}, [selectedGroup, selectedFacility,  selectedComplex , charges]);
 
 
 
   // Update rate when facility, group, or type is selected
   useEffect(() => {
-    if (selectedFacility && selectedGroup && selectedType) {
-      const selectedCharge = filteredBookings.find(
-        (charges) =>
-          charges.facility_type === selectedFacility &&
-          charges.group === selectedGroup &&
-          charges.type === selectedType
+    if (selectedType) {
+      const charge = charges.find(charge => 
+        charge.sports_complex_name === selectedComplex &&
+        charge.facility_type === selectedFacility &&
+        charge.group === selectedGroup &&
+        charge.type === selectedType
       );
-      setFacilityRate(selectedCharge?.rate || null);
+      setFacilityRate(charge?.rate || null);
     }
-  }, [selectedFacility, selectedGroup, selectedType, charges]);
+  }, [selectedType, selectedComplex, selectedFacility, selectedGroup, charges]);
 
   // Handle booking submission
   const handleBookingSubmit = async () => {
@@ -248,9 +255,12 @@ useEffect(() => {
         alert('Booking submitted successfully!');
         console.log('Booking response:', result);
         
-        // Add the newly booked time to the list of booked slots
-        const newBookedTime = new Date(bookingDetails.booking_date + ' ' + bookingDetails.booking_time);
-        setBookedSlots((prevSlots) => [...prevSlots, newBookedTime]);
+        const fetchBookings = async () => {
+          const response = await fetch("http://localhost:8000/facility_booking/bookings/list/");
+          const data = await response.json();
+          setBookings(Array.isArray(data) ? data : []);
+        };
+        await fetchBookings();
 
         setErrorInfo(""); // Clear error information
       } else {
@@ -282,13 +292,10 @@ useEffect(() => {
         margin="normal"
       >
         <MenuItem value="">Select a Complex</MenuItem>
-        {bookings
-          .map((booking) => booking.sports_complex_name)
-          .filter((value, index, self) => self.indexOf(value) === index) // Remove duplicates
-          .map((complex, index) => (
-            <MenuItem key={index} value={complex}>
-              {complexMapping[complex] || complex}
-            </MenuItem>
+        {uniqueComplexes.map((complex, index) => (
+          <MenuItem key={index} value={complex}>
+            {complexMapping[complex] || complex}
+          </MenuItem>
           ))}
       </TextField>
 
