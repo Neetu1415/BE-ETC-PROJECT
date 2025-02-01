@@ -8,21 +8,19 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { getUserInfo } from "../features/auth/authSlice"; 
 import { groupMapping, typeMapping, facilityMapping, complexMapping } from './Mapping';
 
-// Helper function for refreshing access tokens
+// Helper: Refresh access token
 const refreshAccessToken = async () => {
   const refreshToken = localStorage.getItem('refresh_token');
   if (!refreshToken) {
     alert('No refresh token found. Please log in again.');
     return null;
   }
-
   try {
     const response = await fetch('http://localhost:8000/api/token/refresh/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ refresh: refreshToken }),
     });
-
     if (response.ok) {
       const data = await response.json();
       localStorage.setItem('access_token', data.access);
@@ -38,35 +36,52 @@ const refreshAccessToken = async () => {
   }
 };
 
-
 const FacilityBookings = () => {
+  // State declarations
   const [bookings, setBookings] = useState([]);
+  const [charges, setCharges] = useState([]);
+  const [bookedSlots, setBookedSlots] = useState([]);
+  
   const [selectedComplex, setSelectedComplex] = useState('');
-  const [uniqueComplexes, setUniqueComplexes] = useState([]);
-  const [filteredBookings, setFilteredBookings] = useState([]);
-  const [uniqueFacilities, setUniqueFacilities] = useState([]);
-  const [uniqueGroups, setUniqueGroups] = useState([]);
-  const [uniqueTypes, setUniqueTypes] = useState([]);
   const [selectedFacility, setSelectedFacility] = useState('');
   const [selectedGroup, setSelectedGroup] = useState('');
   const [selectedType, setSelectedType] = useState('');
   const [facilityRate, setFacilityRate] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
-  const [bookedSlots, setBookedSlots] = useState([]);
+  
+  const [uniqueComplexes, setUniqueComplexes] = useState([]);
+  const [uniqueFacilities, setUniqueFacilities] = useState([]);
+  const [uniqueGroups, setUniqueGroups] = useState([]);
+  const [uniqueTypes, setUniqueTypes] = useState([]);
+  
+  const [errorInfo, setErrorInfo] = useState("");
+  
   const dispatch = useDispatch();
   const { user, isAuthenticated, userInfo, token } = useSelector((state) => state.auth);
-  const [errorInfo, setErrorInfo] = useState(""); // State to hold error messages
-  const [charges, setCharges] = useState([]);
   const userEmail = user?.email || userInfo?.email || "Email not available";
 
-  // Fetch user info if not already loaded
-  useEffect(() => {
-    if (isAuthenticated && !userInfo?.email && token?.access) {
-      dispatch(getUserInfo(token.access));
-    }
-  }, [isAuthenticated, userInfo, token, dispatch]);
+  // Format date to YYYY-MM-DD (IST)
+  const toISTDateString = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
 
+  // Convert Date object to "HH:mm" string (assumed to be in local/IST time)
+  const convertLocalToISTTime = (date) => {
+    return date.toTimeString().slice(0, 5);
+  };
+
+  // Get a Date object with hours and minutes set (assumed IST)
+  const getISTTimeInLocal = (baseDate, istHour, istMinute) => {
+    const date = new Date(baseDate);
+    date.setHours(istHour, istMinute, 0, 0);
+    return date;
+  };
+
+  // --- Fetching Data on Component Mount ---
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -76,11 +91,20 @@ const FacilityBookings = () => {
         const chargesData = await chargesResponse.json();
         setCharges(Array.isArray(chargesData) ? chargesData : []);
         
+        // Refresh or get access token
+        let accessToken = localStorage.getItem('access_token');
+        if (!accessToken) {
+          accessToken = await refreshAccessToken();
+          if (!accessToken) return;
+        }
+
         // Fetch bookings for availability checks
         const bookingsResponse = await fetch("http://localhost:8000/facility_booking/bookings/list/");
         if (!bookingsResponse.ok) throw new Error("Failed to fetch bookings");
         const bookingsData = await bookingsResponse.json();
-        setBookings(Array.isArray(bookingsData) ? bookingsData : []);
+        // Expecting an object with a key "bookings"
+        const bookingsList = bookingsData.bookings ? bookingsData.bookings : [];
+        setBookings(bookingsList);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -88,110 +112,79 @@ const FacilityBookings = () => {
     fetchData();
   }, []);
 
-   // Extract unique complexes from charges
-   useEffect(() => {
+  // --- Update Dropdown Options from Charges ---
+  useEffect(() => {
+    // Unique sports complexes
     const complexes = [...new Set(charges.map(charge => charge.sports_complex_name))];
     setUniqueComplexes(complexes);
   }, [charges]);
-  
 
-  
   useEffect(() => {
-    if (selectedFacility && selectedDate) {
-      const selectedDateStr = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
-      const slots = bookings
-        .filter(booking => 
-          booking.facility_type === selectedFacility &&
-          booking.sports_complex_name === selectedComplex &&
-          booking.date === selectedDateStr
-        )
-        .map(booking => new Date(`${booking.date}T${booking.booking_time}`));
-      setBookedSlots(slots);
+    if (selectedComplex) {
+      // Filter facilities for the selected complex
+      const facilities = [...new Set(
+        charges
+          .filter(charge => charge.sports_complex_name === selectedComplex)
+          .map(charge => charge.facility_type)
+      )];
+      setUniqueFacilities(facilities);
+      // Reset facility, group, and type selections
+      setSelectedFacility('');
+      setUniqueGroups([]);
+      setUniqueTypes([]);
+      setSelectedGroup('');
+      setSelectedType('');
+    } else {
+      setUniqueFacilities([]);
+      setUniqueGroups([]);
+      setUniqueTypes([]);
     }
-  }, [selectedFacility, selectedComplex, selectedDate, bookings]);
+  }, [selectedComplex, charges]);
 
-  const shouldDisableTime = (time) => {
-    return bookedSlots.some(
-      bookedTime => 
-        bookedTime.getHours() === time.getHours() &&
-        bookedTime.getMinutes() === time.getMinutes()
-    );
-  };
+  useEffect(() => {
+    if (selectedFacility) {
+      // Filter groups for the selected facility and complex
+      const groups = [...new Set(
+        charges
+          .filter(charge => 
+            charge.sports_complex_name === selectedComplex &&
+            charge.facility_type === selectedFacility
+          )
+          .map(charge => charge.group)
+      )];
+      setUniqueGroups(groups);
+      setUniqueTypes([]);
+      setSelectedGroup('');
+      setSelectedType('');
+    } else {
+      setUniqueGroups([]);
+      setUniqueTypes([]);
+    }
+  }, [selectedFacility, selectedComplex, charges]);
 
+  useEffect(() => {
+    if (selectedGroup) {
+      // Filter types for the selected group, facility, and complex
+      const types = [...new Set(
+        charges
+          .filter(charge =>
+            charge.sports_complex_name === selectedComplex &&
+            charge.facility_type === selectedFacility &&
+            charge.group === selectedGroup
+          )
+          .map(charge => charge.type)
+      )];
+      setUniqueTypes(types);
+      setSelectedType('');
+    } else {
+      setUniqueTypes([]);
+    }
+  }, [selectedGroup, selectedFacility, selectedComplex, charges]);
 
-  
-
-
-  // Filter bookings based on selected sports complex
-useEffect(() => {
-  if (selectedComplex) {
-
-    const facilities = [...new Set(
-      charges
-        .filter(charge => charge.sports_complex_name === selectedComplex)
-        .map(charge => charge.facility_type)
-    )];
-    setUniqueFacilities(facilities);  
-    setUniqueGroups([]);
-    setUniqueTypes([]);
-    setSelectedFacility('');
-    setSelectedGroup('');
-    setSelectedType('');
-  } else {
-    setFilteredBookings([]);
-    setUniqueFacilities([]);
-    setUniqueGroups([]);
-    setUniqueTypes([]);
-  }
-}, [selectedComplex, charges]);
-
-// Filter groups based on selected facility
-useEffect(() => {
-  if (selectedFacility) {
-    
-    const groups = [...new Set(
-      charges
-        .filter(charge => 
-          charge.sports_complex_name === selectedComplex &&
-          charge.facility_type === selectedFacility
-        )
-        .map(charge => charge.group)
-    )];
-    setUniqueGroups(groups);
-    setUniqueTypes([]);
-    setSelectedGroup('');
-    setSelectedType('');
-  } else {
-    setUniqueGroups([]);
-    setUniqueTypes([]);
-  }
-}, [selectedFacility,selectedComplex, charges]);
-
-// Filter types based on selected group
-useEffect(() => {
-  if (selectedGroup) {
-    const types = [...new Set(
-      charges
-        .filter(charge => 
-          charge.sports_complex_name === selectedComplex &&
-          charge.facility_type === selectedFacility &&
-          charge.group === selectedGroup
-        )
-        .map(charge => charge.type)
-    )];
-    setUniqueTypes(types);
-    setSelectedType('');
-  } else {
-    setUniqueTypes([]);
-  }
-}, [selectedGroup, selectedFacility,  selectedComplex , charges]);
-
-
-
-  // Update rate when facility, group, or type is selected
+  // --- Update Facility Rate ---
   useEffect(() => {
     if (selectedType) {
-      const charge = charges.find(charge => 
+      const charge = charges.find(charge =>
         charge.sports_complex_name === selectedComplex &&
         charge.facility_type === selectedFacility &&
         charge.group === selectedGroup &&
@@ -201,68 +194,102 @@ useEffect(() => {
     }
   }, [selectedType, selectedComplex, selectedFacility, selectedGroup, charges]);
 
-  // Handle booking submission
+  // --- Update Booked Slots Based on Selected Date, Facility, and Complex ---
+  useEffect(() => {
+    if (selectedFacility && selectedComplex && selectedDate) {
+      const selectedDateStr = toISTDateString(selectedDate);
+      const filteredBookings = bookings.filter(booking =>
+        booking.facility_type === selectedFacility &&
+        booking.sports_complex === selectedComplex &&
+        booking.booking_date === selectedDateStr
+      );
+      const slots = filteredBookings
+        .map(booking => booking.booking_time.slice(0, 5))
+        .sort(); // Optional: sort the times
+      setBookedSlots(slots);
+    }
+  }, [selectedFacility, selectedComplex, selectedDate, bookings]);
+
+  // --- Time Picker: Disable Booked Times ---
+  const shouldDisableTime = (time) => {
+    if (!time) return false;
+    const istTimeString = convertLocalToISTTime(time);
+    return bookedSlots.some(slot => slot === istTimeString);
+  };
+
+  // --- Handle Booking Submission ---
   const handleBookingSubmit = async () => {
     if (!selectedDate || !selectedTime || !selectedFacility || !selectedGroup || !selectedType) {
       setErrorInfo("Please select all required fields.");
       return;
     }
     
-    const formatToIST = (date) => {
-      const options = { hour12: false, hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Kolkata' };
-      return new Intl.DateTimeFormat('en-IN', options).format(date);
-    };
-
+    // Format date and time to the expected format
     const formatToLocalDate = (date) => {
       const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0'); // Month is zero-based
+      const month = String(date.getMonth() + 1).padStart(2, '0');
       const day = String(date.getDate()).padStart(2, '0');
       return `${year}-${month}-${day}`;
     };
 
-    // Construct booking details to match the backend serializer expectations
+    const formatToIST = (date) => {
+      const options = { 
+        hour12: false, 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        second: '2-digit', 
+        timeZone: 'Asia/Kolkata' 
+      };
+      return new Intl.DateTimeFormat('en-IN', options).format(date);
+    };
+
+    // Build booking details payload
     const bookingDetails = {
-      booking_date: formatToLocalDate(selectedDate), 
-      booking_time: formatToIST(selectedTime), // Send time in IST format
-      sports_complex_name: selectedComplex, // Corrected to use the sports complex name
+      booking_date: formatToLocalDate(selectedDate),
+      booking_time: formatToIST(selectedTime),
+      sports_complex_name: selectedComplex,
       facility_type: selectedFacility,
       group: selectedGroup,
       type: selectedType,
       rate: facilityRate,
       user_email: userEmail,
     };
-  
-    console.log('Booking details being sent:', bookingDetails);
-  
+
     try {
       let accessToken = localStorage.getItem('access_token');
       if (!accessToken) {
-        accessToken = await refreshAccessToken(); // Fetch a new token if not available
-        if (!accessToken) return; // Stop if no valid token
+        accessToken = await refreshAccessToken();
+        if (!accessToken) return;
       }
   
       const response = await fetch('http://localhost:8000/facility_booking/bookings/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`, // Add authorization header
+          Authorization: `Bearer ${accessToken}`,
         },
-        body: JSON.stringify(bookingDetails), // Send the payload
+        body: JSON.stringify(bookingDetails),
       });
   
       if (response.ok) {
         const result = await response.json();
         alert('Booking submitted successfully!');
-        console.log('Booking response:', result);
-        
+        // Re-fetch bookings after submission to update availability
         const fetchBookings = async () => {
-          const response = await fetch("http://localhost:8000/facility_booking/bookings/list/");
+          let accessToken = localStorage.getItem('access_token');
+          if (!accessToken) {
+            accessToken = await refreshAccessToken();
+            if (!accessToken) return;
+          }
+          const response = await fetch("http://localhost:8000/facility_booking/bookings/list/", {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          });
           const data = await response.json();
-          setBookings(Array.isArray(data) ? data : []);
+          const bookingsList = data.bookings ? data.bookings : [];
+          setBookings(bookingsList);
         };
         await fetchBookings();
-
-        setErrorInfo(""); // Clear error information
+        setErrorInfo("");
       } else {
         const error = await response.json();
         console.error('Error submitting booking:', error);
@@ -273,16 +300,15 @@ useEffect(() => {
       alert('An error occurred while submitting the booking.');
     }
   };
-  
-  
 
+  // --- Render ---
   return (
     <div className="dropdown-container">
       <div className="title-container">
         <h2 className="title1">Facility Bookings</h2>
       </div>
 
-      {/* sports complex dropdown */} 
+      {/* Sports Complex Dropdown */}
       <TextField
         select
         label="Select Sports Complex"
@@ -296,10 +322,10 @@ useEffect(() => {
           <MenuItem key={index} value={complex}>
             {complexMapping[complex] || complex}
           </MenuItem>
-          ))}
+        ))}
       </TextField>
 
-      {/* facility dropdown */}
+      {/* Facility Dropdown */}
       {selectedComplex && (
         <TextField
           select
@@ -318,7 +344,7 @@ useEffect(() => {
         </TextField>
       )}
 
-        {/* group dropdown */}
+      {/* Group Dropdown */}
       {selectedFacility && (
         <TextField
           select
@@ -337,7 +363,7 @@ useEffect(() => {
         </TextField>
       )}
 
-      {/* Type dropdown */}
+      {/* Type Dropdown */}
       {selectedGroup && (
         <TextField
           select
@@ -356,13 +382,13 @@ useEffect(() => {
         </TextField>
       )}
 
-      {/* Date Picker*/ }
+      {/* Date Picker */}
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <DatePicker
           label="Select Date"
           value={selectedDate}
           onChange={setSelectedDate}
-          minDate={new Date()} // Prevent past date selection
+          minDate={new Date()}
           renderInput={(props) => <TextField {...props} fullWidth margin="normal" />}
         />
       </LocalizationProvider>
@@ -375,18 +401,17 @@ useEffect(() => {
             value={selectedTime}
             onChange={setSelectedTime}
             shouldDisableTime={shouldDisableTime}
-            minTime={new Date().setHours(9, 0, 0)} // Set minimum time to 9:00 AM
-            maxTime={new Date().setHours(18, 0, 0)} // Set maximum time to 6:00 PM
-            views={['hours']} // Include only hours and minutes in the picker
-            ampm={false} // Use 24-hour format
+            minTime={selectedDate ? getISTTimeInLocal(selectedDate, 9, 0) : null}
+            maxTime={selectedDate ? getISTTimeInLocal(selectedDate, 18, 0) : null}
+            views={['hours']}
+            ampm={false}
             renderInput={(props) => <TextField {...props} fullWidth margin="normal" />}
-            minutesStep={60} // Step interval of 60 minutes
-            
+            minutesStep={60}
           />
         </LocalizationProvider>
       )}
 
-      {/* Display the rate for the selected facility */}
+      {/* Display Facility Rate */}
       {selectedFacility && selectedGroup && selectedType && facilityRate !== null && (
         <div className="rate-display">
           <h3>
@@ -396,7 +421,7 @@ useEffect(() => {
         </div>
       )}
 
-      
+      {/* Display Error Information */}
       {errorInfo && (
         <div className="error-info" style={{ color: 'red', marginTop: '10px' }}>
           {errorInfo}
@@ -412,6 +437,7 @@ useEffect(() => {
 };
 
 export default FacilityBookings;
+
 
 
 
