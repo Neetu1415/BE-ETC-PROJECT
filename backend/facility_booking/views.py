@@ -4,11 +4,13 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Charges , Booking
-from .serializers import SlotSerializer
+from .serializers import SlotSerializer , BookingSerializer
 from sports_facility.models import  Sports_complex
 from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.views import APIView
+
+
 
 @api_view(['GET'])
 def slots(request):
@@ -26,18 +28,28 @@ class BookingView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    """"
-    def get(self, request, *args, **kwargs):
-        bookings = Booking.objects.all()
-        booking_list = [
-            f"{booking.user.email} - {booking.booking_date} {booking.booking_time}"
-            for booking in bookings
-        ]
-        return Response({"bookings": booking_list}, status=status.HTTP_200_OK)
-    """
+   
 class BookingListView(APIView):
     def get(self, request, *args, **kwargs):
+         # Read filtering query parameters (if provided)
+        facility_type = request.query_params.get('facility_type')  # e.g., 'GY'
+        sports_complex = request.query_params.get('sports_complex')  # e.g., 'TM'
+        booking_date = request.query_params.get('booking_date')  # e.g., '2025-02-01'
+
         bookings = Booking.objects.all()
+        # Filter on facility_type (assuming your Sports_complex model has a field named 'facility')
+        if facility_type:
+            bookings = bookings.filter(sports_complex__facility=facility_type)
+
+        # Filter on sports_complex (assuming your Sports_complex model has a field named 'name')
+        if sports_complex:
+            bookings = bookings.filter(sports_complex__name=sports_complex)
+
+        # Filter on booking_date
+        if booking_date:
+            bookings = bookings.filter(booking_date=booking_date)
+
+
         booking_list = [
             {
                 "user_email": booking.user.email,
