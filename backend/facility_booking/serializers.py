@@ -106,7 +106,7 @@ class BookingSerializer(serializers.ModelSerializer):
             if booking_type == "M":
                 duration = 30
             elif booking_type == "Q":
-                duration = 120
+                duration = 90
             elif booking_type == "Y":
                 duration = 365
             booking_end_date = booking_date + timedelta(days=duration)
