@@ -9,7 +9,8 @@ from sports_facility.models import  Sports_complex
 from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.views import APIView
-from datetime import date
+from datetime import date , timedelta
+from django.db import models
 
 
 
@@ -34,21 +35,31 @@ class BookingView(APIView):
 def fully_booked_dates(request):
     facility_type = request.query_params.get('facility_type')
     sports_complex = request.query_params.get('sports_complex')
-    # Adjust these field lookups as needed.
     if not (facility_type and sports_complex):
         return Response({"fullyBookedDates": []})
     
-    # Find all bookings for the given facility/complex that are full day:
+    # Fetch all bookings for the facility/complex that either are full-day FD
+    # or are extended (i.e. booking_end_date > booking_date)
     bookings = Booking.objects.filter(
         sports_complex__facility=facility_type,
-        sports_complex__name=sports_complex,
-        booking_time__hour=9,         # start at 09:00
-        booking_end_time__hour=18       # end at 18:00
+        sports_complex__name=sports_complex
+    ).filter(
+        models.Q(booking_time__hour=9, booking_end_time__hour=18) |
+        models.Q(booking_end_date__gt=models.F('booking_date'))
     )
     
-    # Extract unique dates:
-    fullyBookedDates = sorted({booking.booking_date.strftime("%Y-%m-%d") for booking in bookings})
+    fullyBookedDatesSet = set()
+    for booking in bookings:
+        start = booking.booking_date
+        # Use booking_end_date if available and greater than start, else just the start date.
+        end = booking.booking_end_date if booking.booking_end_date and booking.booking_end_date > booking.booking_date else booking.booking_date
+        # Add every date in the range
+        for i in range((end - start).days + 1):
+            d = start + timedelta(days=i)
+            fullyBookedDatesSet.add(d.strftime("%Y-%m-%d"))
+    fullyBookedDates = sorted(list(fullyBookedDatesSet))
     return Response({"fullyBookedDates": fullyBookedDates})
+
    
 class BookingListView(APIView):
     def get(self, request, *args, **kwargs):
@@ -68,7 +79,10 @@ class BookingListView(APIView):
 
         # Filter on booking_date
         if booking_date:
-            bookings = bookings.filter(booking_date=booking_date)
+            bookings = bookings.filter(
+                Q(booking_date__lte=booking_date, booking_end_date__gte=booking_date) |
+                Q(booking_date=booking_date, booking_end_date__isnull=True)
+            )
 
 
         booking_list = [
