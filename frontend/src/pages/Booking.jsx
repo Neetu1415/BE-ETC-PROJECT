@@ -213,7 +213,7 @@ const FacilityBookings = () => {
   //full day bookings
   useEffect(() => {
     const fetchFullyBookedDates = async () => {
-      if (selectedType === "FD" && selectedFacility && selectedComplex) {
+      if (["FD", "M", "Q", "Y"].includes(selectedType) && selectedFacility && selectedComplex) {
         const params = new URLSearchParams({
           facility_type: selectedFacility,
           sports_complex: selectedComplex,
@@ -345,6 +345,14 @@ const FacilityBookings = () => {
               Computed End Time (1-hour duration): {convertLocalToISTTime(selectedEndTime)}
             </Typography>
           )}
+          {(["M", "Q", "Y"].includes(selectedType)) && selectedDate && (
+            <Typography variant="body2" style={{ marginTop: '8px' }}>
+              {selectedType === "M" && `Monthly booking: This slot will be booked for 30 days from ${toISTDateString(selectedDate)}.`}
+              {selectedType === "Q" && `Quarterly booking: This slot will be booked for 120 days from ${toISTDateString(selectedDate)}.`}
+              {selectedType === "Y" && `Annual booking: This slot will be booked for 365 days from ${toISTDateString(selectedDate)}.`}
+            </Typography>
+          )}
+
         </>
       );
     }
@@ -517,9 +525,12 @@ const FacilityBookings = () => {
             }
             return false;
           }}
+          
           renderInput={(props) => <TextField {...props} fullWidth margin="normal" />}
         />
       </LocalizationProvider>
+
+
 
       {/* Time Pickers or Fixed Display Based on Booking Type */}
       {selectedDate && selectedFacility && renderTimePickers()}
