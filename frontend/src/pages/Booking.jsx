@@ -348,7 +348,7 @@ const FacilityBookings = () => {
           {(["M", "Q", "Y"].includes(selectedType)) && selectedDate && (
             <Typography variant="body2" style={{ marginTop: '8px' }}>
               {selectedType === "M" && `Monthly booking: This slot will be booked for 30 days from ${toISTDateString(selectedDate)}.`}
-              {selectedType === "Q" && `Quarterly booking: This slot will be booked for 120 days from ${toISTDateString(selectedDate)}.`}
+              {selectedType === "Q" && `Quarterly booking: This slot will be booked for 90 days from ${toISTDateString(selectedDate)}.`}
               {selectedType === "Y" && `Annual booking: This slot will be booked for 365 days from ${toISTDateString(selectedDate)}.`}
             </Typography>
           )}
