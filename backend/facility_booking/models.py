@@ -52,9 +52,10 @@ class Booking(models.Model):
     sports_complex = models.ForeignKey(Sports_complex, on_delete=models.CASCADE) 
     booking_date = models.DateField()  
     booking_time = models.TimeField()  
+    booking_end_time = models.TimeField(null=True, blank=True)
     charges= models.ForeignKey(Charges, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.user.email} - {self.booking_date} {self.booking_time}"
+        return f"{self.user.email} - {self.booking_date} {self.booking_time} to {self.booking_end_time}"
 
 

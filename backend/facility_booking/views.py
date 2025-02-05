@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+from django.db.models import Q
 # Create your views here.
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -9,6 +9,7 @@ from sports_facility.models import  Sports_complex
 from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.views import APIView
+from datetime import date
 
 
 
@@ -28,6 +29,26 @@ class BookingView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['GET'])
+def fully_booked_dates(request):
+    facility_type = request.query_params.get('facility_type')
+    sports_complex = request.query_params.get('sports_complex')
+    # Adjust these field lookups as needed.
+    if not (facility_type and sports_complex):
+        return Response({"fullyBookedDates": []})
+    
+    # Find all bookings for the given facility/complex that are full day:
+    bookings = Booking.objects.filter(
+        sports_complex__facility=facility_type,
+        sports_complex__name=sports_complex,
+        booking_time__hour=9,         # start at 09:00
+        booking_end_time__hour=18       # end at 18:00
+    )
+    
+    # Extract unique dates:
+    fullyBookedDates = sorted({booking.booking_date.strftime("%Y-%m-%d") for booking in bookings})
+    return Response({"fullyBookedDates": fullyBookedDates})
    
 class BookingListView(APIView):
     def get(self, request, *args, **kwargs):
@@ -55,6 +76,7 @@ class BookingListView(APIView):
                 "user_email": booking.user.email,
                 "booking_date": booking.booking_date,
                 "booking_time": booking.booking_time,
+                "booking_end_time": booking.booking_end_time,
                 "sports_complex": booking.sports_complex.name,
                 "facility_type": booking.sports_complex.facility # Assuming a relationship
             }
