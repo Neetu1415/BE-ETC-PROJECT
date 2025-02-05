@@ -41,7 +41,7 @@ class BookingSerializer(serializers.ModelSerializer):
     
     # Add booking_end_time as a read-only field so that it is returned in the response.
     booking_end_time = serializers.TimeField(read_only=True)
-
+    booking_end_date = serializers.DateField(read_only=True)
     class Meta:
         model = Booking
         fields = [
@@ -54,6 +54,7 @@ class BookingSerializer(serializers.ModelSerializer):
             'booking_date',
             'booking_time',
             'booking_end_time',
+            'booking_end_date',
         ]
 
     def validate_user_email(self, value):
@@ -100,12 +101,26 @@ class BookingSerializer(serializers.ModelSerializer):
 
         # Check for overlapping bookings:
         booking_date = validated_data.get("booking_date")
+        # Compute booking_end_date based on booking_type:
+        if booking_type in ["M", "Q", "Y"]:
+            if booking_type == "M":
+                duration = 30
+            elif booking_type == "Q":
+                duration = 120
+            elif booking_type == "Y":
+                duration = 365
+            booking_end_date = booking_date + timedelta(days=duration)
+        else:
+            booking_end_date = booking_date
+
+        # Overlap checking (you may adjust this logic as needed):
         overlapping_booking = Booking.objects.filter(
             sports_complex=sports_complex,
             booking_date=booking_date
         ).filter(
             booking_time__lt=booking_end_time,  # Existing booking starts before new booking ends.
-            booking_end_time__gt=booking_time    # Existing booking ends after new booking starts.
+            booking_end_time__gt=booking_time,   # Existing booking ends after new booking starts.
+            booking_end_date__gte=booking_date,
         ).exists()
 
         if overlapping_booking:
@@ -116,5 +131,6 @@ class BookingSerializer(serializers.ModelSerializer):
         validated_data["sports_complex"] = sports_complex
         validated_data["charges"] = charges
         validated_data["booking_end_time"] = booking_end_time
+        validated_data["booking_end_date"] = booking_end_date
 
         return Booking.objects.create(**validated_data)
