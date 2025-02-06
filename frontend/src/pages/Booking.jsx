@@ -213,7 +213,7 @@ const FacilityBookings = () => {
   //full day bookings
   useEffect(() => {
     const fetchFullyBookedDates = async () => {
-      if (["FD", "M", "Q", "Y"].includes(selectedType) && selectedFacility && selectedComplex) {
+      if (["FD"].includes(selectedType) && selectedFacility && selectedComplex) {
         const params = new URLSearchParams({
           facility_type: selectedFacility,
           sports_complex: selectedComplex,
@@ -274,10 +274,11 @@ const FacilityBookings = () => {
   // Now that bookedSlots is coming from the backend, we use it directly.
   const shouldDisableTime = (time) => {
     if (!time) return false;
-    const istTimeString = convertLocalToISTTime(time);
-    return bookedSlots.includes(istTimeString);
+    const istTimeString = convertLocalToISTTime(time); // Now it's defined here.
+    const count = bookedSlots.filter(slot => slot === istTimeString).length;
+    return count >= 2; // Disable if two bookings already exist.
   };
-
+  
   // ---------------------- Render: UI Adjustments Based on Booking Type ----------------------
   const renderTimePickers = () => {
     if (!selectedDate || !selectedFacility) return null;
