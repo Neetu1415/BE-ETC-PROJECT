@@ -113,18 +113,21 @@ class BookingSerializer(serializers.ModelSerializer):
         else:
             booking_end_date = booking_date
 
-        # Overlap checking (you may adjust this logic as needed):
-        overlapping_booking = Booking.objects.filter(
+        booking_type = charges_data.get("type")
+        duplicate_booking_count = Booking.objects.filter(
             sports_complex=sports_complex,
-            booking_date=booking_date
-        ).filter(
-            booking_time__lt=booking_end_time,  # Existing booking starts before new booking ends.
-            booking_end_time__gt=booking_time,   # Existing booking ends after new booking starts.
-            booking_end_date__gte=booking_date,
-        ).exists()
+            booking_date=validated_data.get("booking_date"),
+            booking_time=validated_data.get("booking_time"),
+            charges__type=booking_type,
+            charges__group=charges_data.get("group")  # if you want to also match on group
+        ).count()
 
-        if overlapping_booking:
-            raise serializers.ValidationError("The chosen time slot overlaps with an existing booking.")
+        if duplicate_booking_count >= 2:
+            raise serializers.ValidationError(
+                "The chosen time slot has already been booked by two users. Please select another slot."
+            )
+
+        
 
         # Add the computed and resolved fields
         validated_data["user"] = user
@@ -132,5 +135,7 @@ class BookingSerializer(serializers.ModelSerializer):
         validated_data["charges"] = charges
         validated_data["booking_end_time"] = booking_end_time
         validated_data["booking_end_date"] = booking_end_date
+
+        
 
         return Booking.objects.create(**validated_data)
