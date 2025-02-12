@@ -1,55 +1,58 @@
 # users/forms.py
 from django import forms
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
-from sports_facility.models import Sports_complex
+from sports_facility.models import Sports_complex, COMPLEX_class
 from .models import User
 
-# Custom user creation form (for registration, etc.)
-class CustomUserCreationForm(UserCreationForm):
-    class Meta(UserCreationForm.Meta):
-        model = User
-        fields = ["email", "first_name", "last_name"]
-        error_class = "error"
-
-
-# Custom user change form (for editing users outside of admin)
-class CustomUserChangeForm(UserChangeForm):
-    class Meta(UserChangeForm.Meta):
-        model = User
-        fields = ["email", "first_name", "last_name"]
-        error_class = "error"
-
-
-# Custom admin form to control the stadium field widget
+# Custom admin form that includes our stadium field filtering logic
 class UserAdminForm(forms.ModelForm):
     class Meta:
         model = User
         fields = '__all__'
 
-    # Define the stadium field so we can override its queryset and display
     stadium = forms.ModelChoiceField(
-        queryset=Sports_complex.objects.none(),
+        queryset=Sports_complex.objects.none(),  # Initially empty queryset
         required=False
     )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Get all sports complexes ordered by the 'name' field.
-        qs = Sports_complex.objects.all().order_by('name')
+        # Step 1: Get all Sports Complex records
+        all_sports_complexes = Sports_complex.objects.all().order_by('uid')
 
-        # Build a list of IDs for the first occurrence of each unique complex name.
-        unique_ids = []
-        seen = set()
-        for obj in qs:
-            # Protect against None values.
-            if obj.name and obj.name not in seen:
-                unique_ids.append(obj.id)
-                seen.add(obj.name)
+        # Step 2: Remove duplicates based on `uid`
+        unique_complexes = []
+        seen_uids = set()
 
-        # Filter the queryset so that only one Sports_complex per unique name appears.
-        unique_qs = Sports_complex.objects.filter(id__in=unique_ids)
-        self.fields['stadium'].queryset = unique_qs
+        for complex in all_sports_complexes:
+            if complex.uid and complex.uid not in seen_uids:
+                unique_complexes.append(complex.id)  # Store unique complex ID
+                seen_uids.add(complex.uid)  # Mark UID as seen
 
-        # Override the label to display only the sports complex name.
-        self.fields['stadium'].label_from_instance = lambda obj: obj.get_name_display() if obj.name else ""
+        # Step 3: Get only the unique sports complexes
+        unique_queryset = Sports_complex.objects.filter(id__in=unique_complexes)
+
+        # Step 4: Set the filtered queryset to remove duplicates
+        self.fields['stadium'].queryset = unique_queryset
+
+        # Step 5: Customize how stadium names appear in the dropdown
+        self.fields['stadium'].label_from_instance = lambda obj: (
+            COMPLEX_class[obj.name].value if obj.name in COMPLEX_class.__members__ else obj.name
+        )
+
+
+
+# Custom user creation form that now inherits the custom filtering logic
+class CustomUserCreationForm(UserAdminForm, UserCreationForm):
+    class Meta(UserCreationForm.Meta):
+        model = User
+        fields = ["email", "first_name", "last_name", "password1", "password2", "role", "stadium"]
+        error_class = "error"
+
+# Custom user change form (unchanged)
+class CustomUserChangeForm(UserChangeForm):
+    class Meta(UserChangeForm.Meta):
+        model = User
+        fields = ["email", "first_name", "last_name"]
+        error_class = "error"

@@ -7,8 +7,8 @@ from .models import User
 
 class UserAdmin(BaseUserAdmin):
     ordering = ["email"]
-    add_form = CustomUserCreationForm
-    form = UserAdminForm  # Use the custom admin form here
+    add_form = CustomUserCreationForm  # Now includes filtering logic
+    form = UserAdminForm  # For editing
     model = User
     list_display = ["email", "first_name", "last_name", "role", "is_staff", "is_active"]
     list_filter = ["role", "is_staff", "is_active"]
