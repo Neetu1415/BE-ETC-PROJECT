@@ -1,118 +1,112 @@
-import axios from "axios"
+// authService.js
+import axios from "axios";
 
-const BACKEND_DOMAIN = "http://localhost:8000"
+const BACKEND_DOMAIN = "http://localhost:8000";
 
-const REGISTER_URL = `${BACKEND_DOMAIN}/api/v1/auth/users/`
-const LOGIN_URL = `${BACKEND_DOMAIN}/api/v1/auth/jwt/create/`
-const ACTIVATE_URL = `${BACKEND_DOMAIN}/api/v1/auth/users/activation/`
-const RESET_PASSWORD_URL = `${BACKEND_DOMAIN}/api/v1/auth/users/reset_password/`
-const RESET_PASSWORD_CONFIRM_URL = `${BACKEND_DOMAIN}/api/v1/auth/users/reset_password_confirm/`
-const GET_USER_INFO = `${BACKEND_DOMAIN}/api/v1/auth/users/me/`
-
-
+// API endpoint URLs
+const REGISTER_URL = `${BACKEND_DOMAIN}/api/v1/auth/users/`;
+const LOGIN_URL = `${BACKEND_DOMAIN}/api/v1/auth/jwt/create/`;
+const ACTIVATE_URL = `${BACKEND_DOMAIN}/api/v1/auth/users/activation/`;
+const RESET_PASSWORD_URL = `${BACKEND_DOMAIN}/api/v1/auth/users/reset_password/`;
+const RESET_PASSWORD_CONFIRM_URL = `${BACKEND_DOMAIN}/api/v1/auth/users/reset_password_confirm/`;
+const GET_USER_INFO = `${BACKEND_DOMAIN}/api/v1/auth/users/me/`;
 
 // Register user
-
 const register = async (userData) => {
-    const config = {
-        headers: {
-            "Content-type": "application/json"
-        }
-    }
+  // Remove any role field sent by the client so that the backend always sets the default role.
+  const { role, ...data } = userData;
+  const config = {
+    headers: {
+      "Content-type": "application/json",
+    },
+  };
 
-    try {
-        const response = await axios.post(REGISTER_URL, userData, config);
-        return response.data;
-    } catch (error) {
-        console.error("Registration failed:", error.response?.data || error.message);
-        throw error; // Re-throw to handle elsewhere
-    }
-
-    
-}
+  try {
+    const response = await axios.post(REGISTER_URL, data, config);
+    return response.data;
+  } catch (error) {
+    console.error("Registration failed:", error.response?.data || error.message);
+    throw error;
+  }
+};
 
 // Login user
-
 const login = async (userData) => {
-    const config = {
-        headers: {
-            "Content-type": "application/json"
-        }
-    }
+  const config = {
+    headers: {
+      "Content-type": "application/json",
+    },
+  };
 
-    const response = await axios.post(LOGIN_URL, userData, config)
+  const response = await axios.post(LOGIN_URL, userData, config);
+  if (response.data) {
+    // The response should include user details along with tokens and role.
+    localStorage.setItem("user", JSON.stringify(response.data));
+  }
+  return response.data;
+};
 
-    if (response.data) {
-        localStorage.setItem("user", JSON.stringify(response.data))
-    }
-
-    return response.data
-}
-
-// Logout 
-
+// Logout user
 const logout = () => {
-    return localStorage.removeItem("user")
-}
+  localStorage.removeItem("user");
+};
 
 // Activate user
-
 const activate = async (userData) => {
-    const config = {
-        headers: {
-            "Content-type": "application/json"
-        }
-    }
+  const config = {
+    headers: {
+      "Content-type": "application/json",
+    },
+  };
 
-    const response = await axios.post(ACTIVATE_URL, userData, config)
-
-    return response.data
-}
+  const response = await axios.post(ACTIVATE_URL, userData, config);
+  return response.data;
+};
 
 // Reset Password
-
 const resetPassword = async (userData) => {
-    const config = {
-        headers: {
-            "Content-type": "application/json"
-        }
-    }
+  const config = {
+    headers: {
+      "Content-type": "application/json",
+    },
+  };
 
-    const response = await axios.post(RESET_PASSWORD_URL, userData, config)
+  const response = await axios.post(RESET_PASSWORD_URL, userData, config);
+  return response.data;
+};
 
-    return response.data
-}
-
-// Reset Password
-
+// Reset Password Confirm
 const resetPasswordConfirm = async (userData) => {
-    const config = {
-        headers: {
-            "Content-type": "application/json"
-        }
-    }
+  const config = {
+    headers: {
+      "Content-type": "application/json",
+    },
+  };
 
-    const response = await axios.post(RESET_PASSWORD_CONFIRM_URL, userData, config)
+  const response = await axios.post(RESET_PASSWORD_CONFIRM_URL, userData, config);
+  return response.data;
+};
 
-    return response.data
-}
-
-// Get User Info
-
+// Get User Info (should include the user's role)
 const getUserInfo = async (accessToken) => {
-    const config = {
-        headers: {
-            "Authorization": `Bearer ${accessToken}`
-        }
-    }
+  const config = {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
 
-    const response = await axios.get(GET_USER_INFO, config)
+  const response = await axios.get(GET_USER_INFO, config);
+  return response.data;
+};
 
-    return response.data
-}
+const authService = {
+  register,
+  login,
+  logout,
+  activate,
+  resetPassword,
+  resetPasswordConfirm,
+  getUserInfo,
+};
 
-
-
-const authService = { register, login, logout, activate, resetPassword, resetPasswordConfirm, getUserInfo }
-
-export default authService
+export default authService;
