@@ -68,12 +68,12 @@ class COMPLEX_class(Enum):
 
 
 class Sports_complex(models.Model):
-    uid=models.CharField(max_length=2,blank=True,null=True)
-    name=models.CharField(max_length=8, choices=COMPLEX_class.choices(),blank=True,null=True)
-    facility=models.CharField(max_length=8, choices=FACILITY_class.choices(),blank=True,null=True)
-    def _str_(self):
-#        label= self.course_code + ' ' + self.course_name
-        return [self.uid] + FACILITY_class[self.facility].value
-    
+    uid = models.CharField(max_length=2, blank=True, null=True)
+    name = models.CharField(max_length=8, choices=COMPLEX_class.choices(), blank=True, null=True)
+    facility = models.CharField(max_length=8, choices=FACILITY_class.choices(), blank=True, null=True)
+
+    def __str__(self):  # ✅ Corrected '__str__' method
+        return f"{self.uid} - {FACILITY_class[self.facility].value}" if self.facility else str(self.uid)
+
     class Meta:
         verbose_name_plural = "Sports complexes"
