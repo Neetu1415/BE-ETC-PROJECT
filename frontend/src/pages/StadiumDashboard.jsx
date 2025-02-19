@@ -7,19 +7,19 @@ const StadiumDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Extract the stadium id from the logged-in user's data
-  const stadiumId = user && user.stadium ? user.stadium.id : null;
+  // Extract the stadium code from the logged-in user's stadium data.
+  // (Assuming that user.stadium.code is the short code that matches booking.sports_complex.)
+  const stadiumCode = user && user.stadium ? user.stadium.code : null;
 
   useEffect(() => {
     const fetchBookings = async () => {
       try {
         const token = localStorage.getItem('access_token');
         if (!token) throw new Error('No access token found');
-        if (!stadiumId) throw new Error('Stadium admin has no assigned stadium');
+        if (!stadiumCode) throw new Error('Stadium admin has no assigned stadium');
 
-        // Adjust the endpoint if your API supports filtering by stadium id.
-        // If not, we fetch all and then filter.
-        const response = await fetch(`http://localhost:8000/facility_booking/bookings/list/`, {
+        // Pass the stadiumCode as a query parameter to filter on the backend.
+        const response = await fetch(`http://localhost:8000/facility_booking/bookings/list/?sports_complex=${stadiumCode}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -40,34 +40,23 @@ const StadiumDashboard = () => {
       }
     };
 
-    fetchBookings();
-  }, [stadiumId]);
-
-  // Debug: log stadiumId and each booking's sports_complex value
-  useEffect(() => {
-    console.log("Admin's stadium ID:", stadiumId);
-    bookings.forEach(booking => {
-      console.log("Booking:", booking, "sports_complex type:", typeof booking.sports_complex);
-    });
-  }, [stadiumId, bookings]);
+    if (stadiumCode) {
+      fetchBookings();
+    } else {
+      setLoading(false);
+    }
+  }, [stadiumCode]);
 
   if (loading) return <p>Loading bookings...</p>;
   if (error) return <p>Error: {error}</p>;
-
-  // Filter bookings using a combined approach:
-  const stadiumCode = user && user.stadium ? user.stadium.code : null;
-  const filteredBookings = stadiumCode
-    ? bookings.filter(booking => String(booking.sports_complex) === String(stadiumCode))
-    : [];
-  
 
   return (
     <div className="dashboard-container">
       <h1>Stadium Dashboard</h1>
       <p>
-        Bookings for {user && user.stadium ? (user.stadium.name_display || user.stadium.name) : "your stadium"}
+        Bookings for {user && user.stadium ? user.stadium.name_display || user.stadium.name : "your stadium"}
       </p>
-      {filteredBookings.length > 0 ? (
+      {bookings.length > 0 ? (
         <table className="bookings-table">
           <thead>
             <tr>
@@ -79,7 +68,7 @@ const StadiumDashboard = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredBookings.map((slot, index) => (
+            {bookings.map((slot, index) => (
               <tr key={index}>
                 <td>{index + 1}</td>
                 <td>{slot.user_email}</td>
