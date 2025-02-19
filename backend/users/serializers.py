@@ -10,10 +10,10 @@ class SportsComplexSerializer(serializers.ModelSerializer):
     # You can customize the fields you want to include.
     # For example, we'll include id and the human-readable name.
     name_display = serializers.SerializerMethodField()
-
+    code = serializers.CharField(source="name", read_only=True)
     class Meta:
         model = Sports_complex
-        fields = ['id', 'name_display']
+        fields = ['id','code' ,'name_display']
 
     def get_name_display(self, obj):
         # Return a friendly name using COMPLEX_class if available

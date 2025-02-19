@@ -55,14 +55,11 @@ const StadiumDashboard = () => {
   if (error) return <p>Error: {error}</p>;
 
   // Filter bookings using a combined approach:
-  const filteredBookings = stadiumId
-    ? bookings.filter(booking => {
-        if (booking.sports_complex && typeof booking.sports_complex === "object") {
-          return Number(booking.sports_complex.id) === Number(stadiumId);
-        }
-        return Number(booking.sports_complex) === Number(stadiumId);
-      })
+  const stadiumCode = user && user.stadium ? user.stadium.code : null;
+  const filteredBookings = stadiumCode
+    ? bookings.filter(booking => String(booking.sports_complex) === String(stadiumCode))
     : [];
+  
 
   return (
     <div className="dashboard-container">
