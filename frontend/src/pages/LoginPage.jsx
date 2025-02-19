@@ -13,7 +13,7 @@ const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { user, isLoading, isError, message } = useSelector((state) => state.auth);
+  const { userInfo, isLoading, isError, message } = useSelector((state) => state.auth);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,16 +38,18 @@ const LoginPage = () => {
 
   // Navigate when user data (including role) is available
   useEffect(() => {
-    if (user && user.role) {
-      if (user.role === "stadium_admin") {
+    // Use userInfo (the complete data) for navigation
+    if (userInfo && userInfo.role) {
+      if (userInfo.role === "stadium_admin") {
         navigate("/stadium/dashboard");
-      } else if (user.role === "overall_admin") {
+      } else if (userInfo.role === "overall_admin") {
         navigate("/admin/dashboard");
       } else {
         navigate("/customer/dashboard");
       }
     }
-  }, [user, navigate]);
+  }, [userInfo, navigate]);
+  
 
   useEffect(() => {
     if (isError) {
