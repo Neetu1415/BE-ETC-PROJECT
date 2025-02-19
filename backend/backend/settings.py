@@ -30,7 +30,7 @@ SECRET_KEY = "django-insecure-$j&_e2jqwv4!+85d%79(m5_6&f@qf-5yeirbwlh4h)&1n*%v@u
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1','testserver']
 
 CORS_ALLOWED_ORIGINS=[
     "http://localhost:3000",
@@ -176,7 +176,8 @@ DJOSER = {
     'SEND_ACTIVATION_EMAIL': True,
     'SERIALIZERS': {
         'user_create': 'users.serializers.CreateUserSerializer',
-        'user': "users.serializers.CreateUserSerializer",
+        'user': "users.serializers.CustomUserSerializer",
+        'current_user': "users.serializers.CustomUserSerializer",
         'user_delete': "djoser.serializers.UserDeleteSerializer",      
     },
 }

@@ -1,30 +1,25 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+// App.js
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Nav from "./components/navigation/Nav"
-import HomePage from "./pages/HomePage"
-import Dashboard from "./pages/Dashboard"
-import LoginPage from "./pages/LoginPage"
-import RegisterPage from "./pages/RegisterPage"
-import ResetPasswordPage from "./pages/ResetPasswordPage"
-import ResetPasswordPageConfirm from "./pages/ResetPasswordPageConfirm";
+import Nav from "./components/navigation/Nav";
+import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
 import ActivatePage from "./pages/ActivatePage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
+import ResetPasswordPageConfirm from "./pages/ResetPasswordPageConfirm";
 import NotFoundPage from "./pages/NotFoundPage";
-import Booking from "./pages/Booking";
-import './App.css';
-import Booked from "./pages/Booked";
-
-
-
-
-
+import CustomerRoutes from "./routes/CustomerRoutes";
+import StadiumAdminRoutes from "./routes/StadiumAdminRoutes";
+import AdminRoutes from "./routes/AdminRoutes";
+import "./App.css";
 
 function App() {
   return (
-    <>
-      <Router>
-        < Nav/>
-        <div style={{ paddingTop: '64px' }}>
+    <Router>
+      <Nav />
+      <div style={{ paddingTop: '64px' }}>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
@@ -32,16 +27,19 @@ function App() {
           <Route path="/activate/:uid/:token" element={<ActivatePage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/password/reset/confirm/:uid/:token" element={<ResetPasswordPageConfirm />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/booking" element={<Booking />} />
+          
+          {/* Role-based Routes */}
+          <Route path="/customer/*" element={<CustomerRoutes />} />
+          <Route path="/stadium/*" element={<StadiumAdminRoutes />} />
+          <Route path="/admin/*" element={<AdminRoutes />} />
+
+          {/* Catch-all */}
           <Route path="*" element={<NotFoundPage />} />
-          <Route path="/booked" element={<Booked />} />
         </Routes>
-        </div>
-      </Router>
+      </div>
       <ToastContainer />
-    </>
-  )
+    </Router>
+  );
 }
 
-export default App
+export default App;

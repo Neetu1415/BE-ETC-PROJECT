@@ -1,14 +1,15 @@
-
-// authSlice.js
+// src/features/auth/authSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import authService from "./authService";
+// Import jwtDecode as a named export if your version requires that:
+import { jwtDecode } from "jwt-decode";
 
 // Parse the stored user from localStorage (if any)
 const user = JSON.parse(localStorage.getItem("user"));
 
 const initialState = {
   user: user ? user : null,
-  userRole: user ? user.role : "customer", // Store the role; default to "customer"
+  userRole: user ? user.role : "customer", // Default role is "customer"
   userInfo: {},
   isError: false,
   isSuccess: false,
@@ -16,7 +17,7 @@ const initialState = {
   message: "",
 };
 
-// Register thunk (backend should NOT allow setting role during registration)
+// REGISTER thunk
 export const register = createAsyncThunk(
   "auth/register",
   async (userData, thunkAPI) => {
@@ -29,18 +30,23 @@ export const register = createAsyncThunk(
           error.response.data.message) ||
         error.message ||
         error.toString();
-
       return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
-// Login thunk
+// LOGIN thunk
 export const login = createAsyncThunk(
   "auth/login",
   async (userData, thunkAPI) => {
     try {
-      return await authService.login(userData);
+      const tokens = await authService.login(userData);
+      // Decode the access token to extract the role
+      const decoded = jwtDecode(tokens.access);
+      console.log("Decoded token payload:", decoded);
+      // If the token doesn't include a role, default to "customer"
+      tokens.role = decoded.role || "customer";
+      return tokens;
     } catch (error) {
       const message =
         (error.response &&
@@ -48,19 +54,18 @@ export const login = createAsyncThunk(
           error.response.data.message) ||
         error.message ||
         error.toString();
-
       return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
-// Logout thunk
+// LOGOUT thunk
 export const logout = createAsyncThunk("auth/logout", async () => {
   authService.logout();
   localStorage.removeItem("user");
 });
 
-// Activate account thunk
+// ACTIVATE thunk
 export const activate = createAsyncThunk(
   "auth/activate",
   async (userData, thunkAPI) => {
@@ -73,13 +78,12 @@ export const activate = createAsyncThunk(
           error.response.data.message) ||
         error.message ||
         error.toString();
-
       return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
-// Reset password thunk
+// RESET PASSWORD thunk
 export const resetPassword = createAsyncThunk(
   "auth/resetPassword",
   async (userData, thunkAPI) => {
@@ -92,13 +96,12 @@ export const resetPassword = createAsyncThunk(
           error.response.data.message) ||
         error.message ||
         error.toString();
-
       return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
-// Reset password confirmation thunk
+// RESET PASSWORD CONFIRM thunk
 export const resetPasswordConfirm = createAsyncThunk(
   "auth/resetPasswordConfirm",
   async (userData, thunkAPI) => {
@@ -111,33 +114,35 @@ export const resetPasswordConfirm = createAsyncThunk(
           error.response.data.message) ||
         error.message ||
         error.toString();
-
       return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
-// Get user info thunk
+// GET USER INFO thunk
 export const getUserInfo = createAsyncThunk(
   "auth/getUserInfo",
   async (_, thunkAPI) => {
     try {
-      const accessToken = thunkAPI.getState().auth.user.access;
-      return await authService.getUserInfo(accessToken);
+      const accessToken = thunkAPI.getState().auth.user?.access;
+      console.log("Access token for getUserInfo:", accessToken);
+      const userData = await authService.getUserInfo(accessToken);
+      console.log("Received userData:", userData);
+      return userData;
     } catch (error) {
       const message =
         (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
+         error.response.data &&
+         error.response.data.message) ||
         error.message ||
         error.toString();
-
+      console.error("getUserInfo error:", message);
       return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
-export const authSlice = createSlice({
+const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
@@ -146,8 +151,8 @@ export const authSlice = createSlice({
       state.isError = false;
       state.isSuccess = false;
       state.message = "";
-      state.user = null; // Ensure user data is cleared on reset
-      state.userInfo = {}; // Clear userInfo on reset
+      state.user = null;         // Clear user data on reset
+      state.userInfo = {};       // Clear userInfo on reset
       state.userRole = "customer"; // Reset role to default if needed
     },
   },
@@ -170,7 +175,6 @@ export const authSlice = createSlice({
         state.message = action.payload;
         state.user = null;
       })
-
       // LOGIN
       .addCase(login.pending, (state) => {
         state.isLoading = true;
@@ -179,7 +183,7 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.user = action.payload;
-        state.userRole = action.payload.role; // Store the role
+        state.userRole = action.payload.role; // Store the role from token decoding
         localStorage.setItem("user", JSON.stringify(action.payload));
         localStorage.setItem("access_token", action.payload.access);
         localStorage.setItem("refresh_token", action.payload.refresh);
@@ -191,13 +195,11 @@ export const authSlice = createSlice({
         state.message = action.payload;
         state.user = null;
       })
-
       // LOGOUT
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
         state.userRole = "customer";
       })
-
       // ACTIVATE
       .addCase(activate.pending, (state) => {
         state.isLoading = true;
@@ -215,7 +217,6 @@ export const authSlice = createSlice({
         state.message = action.payload;
         state.user = null;
       })
-
       // RESET PASSWORD
       .addCase(resetPassword.pending, (state) => {
         state.isLoading = true;
@@ -231,7 +232,6 @@ export const authSlice = createSlice({
         state.message = action.payload;
         state.user = null;
       })
-
       // RESET PASSWORD CONFIRM
       .addCase(resetPasswordConfirm.pending, (state) => {
         state.isLoading = true;
@@ -247,13 +247,14 @@ export const authSlice = createSlice({
         state.message = action.payload;
         state.user = null;
       })
-
       // GET USER INFO
       .addCase(getUserInfo.fulfilled, (state, action) => {
-        state.userInfo = action.payload;
+        // Merge the GET_USER_INFO response into the existing user object.
+        state.user = { ...state.user, ...action.payload };
         if (action.payload.role) {
-          state.userRole = action.payload.role; // Update role if provided
+          state.userRole = action.payload.role;
         }
+        state.userInfo = action.payload;
       });
   },
 });
