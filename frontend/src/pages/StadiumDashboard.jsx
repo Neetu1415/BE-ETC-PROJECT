@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { complexMapping, facilityMapping, groupMapping, typeMapping } from './Mapping.jsx';
+import '../App.css';
+
 
 const StadiumDashboard = () => {
   const { user } = useSelector((state) => state.auth);
@@ -61,10 +64,10 @@ const StadiumDashboard = () => {
           <thead>
             <tr>
               <th>#</th>
-              <th>User Email</th>
-              <th>Booking Date</th>
-              <th>Booking Time</th>
-              <th>Facility Type</th>
+              <th>USER EMAIL</th>
+              <th>BOOKING DATE</th>
+              <th>BOOKING TIME</th>
+              <th>FACILITY TYPE</th>
             </tr>
           </thead>
           <tbody>
@@ -74,7 +77,7 @@ const StadiumDashboard = () => {
                 <td>{slot.user_email}</td>
                 <td>{slot.booking_date}</td>
                 <td>{slot.booking_time}</td>
-                <td>{slot.facility_type}</td>
+                <td>{facilityMapping[slot.facility_type] || slot.facility_type}</td>
               </tr>
             ))}
           </tbody>

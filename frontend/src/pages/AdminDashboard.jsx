@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { complexMapping, facilityMapping, groupMapping, typeMapping } from './Mapping.jsx';
+import '../App.css';
 
 const AdminDashboard = () => {
   const [bookings, setBookings] = useState([]);
@@ -54,16 +56,16 @@ const AdminDashboard = () => {
       {Object.keys(groupedBookings).length > 0 ? (
         Object.entries(groupedBookings).map(([stadiumId, stadiumBookings]) => (
           <div key={stadiumId} className="stadium-group">
-            <h2>Stadium: {stadiumId}</h2>
+            <h2>Stadium: {complexMapping[stadiumId] || stadiumId}</h2>
             {/* You may want to replace stadiumId with a proper display name by mapping it using complexMapping */}
             <table className="bookings-table">
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>User Email</th>
-                  <th>Booking Date</th>
-                  <th>Booking Time</th>
-                  <th>Facility Type</th>
+                  <th>USER EMAIL</th>
+                  <th>BOOKING DATE</th>
+                  <th>BOOKING TIME</th>
+                  <th>FACILITY TYPE</th>
                 </tr>
               </thead>
               <tbody>
@@ -73,7 +75,7 @@ const AdminDashboard = () => {
                     <td>{slot.user_email}</td>
                     <td>{slot.booking_date}</td>
                     <td>{slot.booking_time}</td>
-                    <td>{slot.facility_type}</td>
+                    <td>{facilityMapping[slot.facility_type] || slot.facility_typ}</td>
                   </tr>
                 ))}
               </tbody>
