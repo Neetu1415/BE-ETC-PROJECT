@@ -26,7 +26,7 @@ const AdminDashboard = () => {
         }
         const data = await response.json();
         console.log('Fetched All Bookings:', data);
-        setBookings(data.bookings || []); // Adjust based on your API's structure
+        setBookings(data.bookings || []);
       } catch (err) {
         console.error(err);
         setError(err.message);
@@ -50,6 +50,27 @@ const AdminDashboard = () => {
     return groups;
   }, {});
 
+  // Function to generate CSV from a group of bookings and trigger download
+  const generateCSVForGroup = (stadiumBookings, stadiumId) => {
+    const headers = ['User Email', 'Booking Date', 'Booking Time', 'Facility Type'];
+    const rows = stadiumBookings.map(slot => [
+      slot.user_email,
+      slot.booking_date,
+      slot.booking_time,
+      facilityMapping[slot.facility_type] || slot.facility_type,
+    ]);
+    const csvContent = [headers, ...rows].map(row => row.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `stadium_${stadiumId}_bookings.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="dashboard-container">
       <h1>Overall Admin Dashboard</h1>
@@ -57,7 +78,6 @@ const AdminDashboard = () => {
         Object.entries(groupedBookings).map(([stadiumId, stadiumBookings]) => (
           <div key={stadiumId} className="stadium-group">
             <h2>Stadium: {complexMapping[stadiumId] || stadiumId}</h2>
-            {/* You may want to replace stadiumId with a proper display name by mapping it using complexMapping */}
             <table className="bookings-table">
               <thead>
                 <tr>
@@ -75,11 +95,17 @@ const AdminDashboard = () => {
                     <td>{slot.user_email}</td>
                     <td>{slot.booking_date}</td>
                     <td>{slot.booking_time}</td>
-                    <td>{facilityMapping[slot.facility_type] || slot.facility_typ}</td>
+                    <td>{facilityMapping[slot.facility_type] || slot.facility_type}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
+            <button
+              className="generate-log-button"
+              onClick={() => generateCSVForGroup(stadiumBookings, stadiumId)}
+            >
+              Generate Log
+            </button>
           </div>
         ))
       ) : (
@@ -90,3 +116,4 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
+
