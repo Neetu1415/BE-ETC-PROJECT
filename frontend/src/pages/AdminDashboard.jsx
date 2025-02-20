@@ -6,6 +6,7 @@ const AdminDashboard = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedMonth, setSelectedMonth] = useState(''); // Empty means all months
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -37,11 +38,16 @@ const AdminDashboard = () => {
     fetchBookings();
   }, []);
 
-  if (loading) return <p>Loading bookings...</p>;
-  if (error) return <p>Error: {error}</p>;
+  // Filter bookings based on the selected month
+  const filteredBookings = selectedMonth
+    ? bookings.filter(slot => {
+        const date = new Date(slot.booking_date);
+        return date.getMonth() + 1 === parseInt(selectedMonth, 10);
+      })
+    : bookings;
 
-  // Group bookings by stadium id
-  const groupedBookings = bookings.reduce((groups, booking) => {
+  // Group the filtered bookings by stadium id
+  const groupedBookings = filteredBookings.reduce((groups, booking) => {
     const stadiumId = booking.sports_complex;
     if (!groups[stadiumId]) {
       groups[stadiumId] = [];
@@ -50,9 +56,13 @@ const AdminDashboard = () => {
     return groups;
   }, {});
 
-  // Function to generate CSV from a group of bookings and trigger download
+  // Function to generate CSV from a group of bookings
   const generateCSVForGroup = (stadiumBookings, stadiumId) => {
     const headers = ['User Email', 'Booking Date', 'Booking Time', 'Facility Type'];
+    if (stadiumBookings.length === 0) {
+      alert("No bookings found for the selected month.");
+      return;
+    }
     const rows = stadiumBookings.map(slot => [
       slot.user_email,
       slot.booking_date,
@@ -71,9 +81,38 @@ const AdminDashboard = () => {
     document.body.removeChild(link);
   };
 
+  if (loading) return <p>Loading bookings...</p>;
+  if (error) return <p>Error: {error}</p>;
+
   return (
     <div className="dashboard-container">
       <h1>Overall Admin Dashboard</h1>
+      
+      {/* Month Filter */}
+      <div className="filter-container">
+        <label htmlFor="month-select">Filter by Month: </label>
+        <select 
+          id="month-select" 
+          value={selectedMonth} 
+          onChange={(e) => setSelectedMonth(e.target.value)}
+        >
+          <option value="">All Months</option>
+          <option value="1">January</option>
+          <option value="2">February</option>
+          <option value="3">March</option>
+          <option value="4">April</option>
+          <option value="5">May</option>
+          <option value="6">June</option>
+          <option value="7">July</option>
+          <option value="8">August</option>
+          <option value="9">September</option>
+          <option value="10">October</option>
+          <option value="11">November</option>
+          <option value="12">December</option>
+        </select>
+      </div>
+      
+      {/* Display the grouped bookings */}
       {Object.keys(groupedBookings).length > 0 ? (
         Object.entries(groupedBookings).map(([stadiumId, stadiumBookings]) => (
           <div key={stadiumId} className="stadium-group">
@@ -100,7 +139,7 @@ const AdminDashboard = () => {
                 ))}
               </tbody>
             </table>
-            <button
+            <button 
               className="generate-log-button"
               onClick={() => generateCSVForGroup(stadiumBookings, stadiumId)}
             >
@@ -109,11 +148,13 @@ const AdminDashboard = () => {
           </div>
         ))
       ) : (
-        <p>No bookings available.</p>
+        <p>No bookings available for the selected month.</p>
       )}
     </div>
   );
 };
 
 export default AdminDashboard;
+
+
 

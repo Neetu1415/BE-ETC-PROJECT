@@ -8,6 +8,7 @@ const StadiumDashboard = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedMonth, setSelectedMonth] = useState(''); // Empty means all months
 
   // Extract the stadium code from the logged-in user's stadium data.
   const stadiumCode = user && user.stadium ? user.stadium.code : null;
@@ -48,26 +49,34 @@ const StadiumDashboard = () => {
     }
   }, [stadiumCode]);
 
-  // Function to generate CSV from bookings and trigger download
+  // Filter bookings based on the selected month.
+  const filteredBookings = selectedMonth
+    ? bookings.filter(slot => {
+        const date = new Date(slot.booking_date);
+        return date.getMonth() + 1 === parseInt(selectedMonth, 10);
+      })
+    : bookings;
+
+  // Function to generate CSV from the filtered bookings.
   const generateCSV = () => {
-    // Define headers for CSV
     const headers = ['User Email', 'Booking Date', 'Booking Time', 'Facility Type'];
-    // Map each booking slot into an array of values
-    const rows = bookings.map(slot => [
+    
+    if (filteredBookings.length === 0) {
+      alert("No bookings found for the selected month.");
+      return;
+    }
+    
+    const rows = filteredBookings.map(slot => [
       slot.user_email,
       slot.booking_date,
       slot.booking_time,
-      facilityMapping[slot.facility_type] || slot.facility_type
+      facilityMapping[slot.facility_type] || slot.facility_type,
     ]);
     
-    // Combine headers and rows into a CSV string
     const csvContent = [headers, ...rows].map(row => row.join(",")).join("\n");
-    
-    // Create a Blob from the CSV content
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     
-    // Create a temporary link to trigger the download
     const link = document.createElement("a");
     link.setAttribute("href", url);
     link.setAttribute("download", "stadium_bookings.csv");
@@ -85,7 +94,31 @@ const StadiumDashboard = () => {
       <p>
         Bookings for {user && user.stadium ? user.stadium.name_display || user.stadium.name : "your stadium"}
       </p>
-      {bookings.length > 0 ? (
+      
+      <div className="filter-container">
+        <label htmlFor="month-select">Filter by Month: </label>
+        <select 
+          id="month-select" 
+          value={selectedMonth} 
+          onChange={(e) => setSelectedMonth(e.target.value)}
+        >
+          <option value="">All Months</option>
+          <option value="1">January</option>
+          <option value="2">February</option>
+          <option value="3">March</option>
+          <option value="4">April</option>
+          <option value="5">May</option>
+          <option value="6">June</option>
+          <option value="7">July</option>
+          <option value="8">August</option>
+          <option value="9">September</option>
+          <option value="10">October</option>
+          <option value="11">November</option>
+          <option value="12">December</option>
+        </select>
+      </div>
+
+      {filteredBookings.length > 0 ? (
         <>
           <table className="bookings-table">
             <thead>
@@ -98,7 +131,7 @@ const StadiumDashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {bookings.map((slot, index) => (
+              {filteredBookings.map((slot, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
                   <td>{slot.user_email}</td>
@@ -114,7 +147,7 @@ const StadiumDashboard = () => {
           </button>
         </>
       ) : (
-        <p>No bookings for your stadium.</p>
+        <p>No bookings available for the selected month.</p>
       )}
     </div>
   );
