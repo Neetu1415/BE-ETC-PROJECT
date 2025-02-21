@@ -63,6 +63,8 @@ export const login = createAsyncThunk(
 export const logout = createAsyncThunk("auth/logout", async () => {
   authService.logout();
   localStorage.removeItem("user");
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("refresh_token");
 });
 
 // ACTIVATE thunk
@@ -197,7 +199,9 @@ const authSlice = createSlice({
       })
       // LOGOUT
       .addCase(logout.fulfilled, (state) => {
+        console.log("Logging out: clearing state");
         state.user = null;
+        state.userInfo = {}; 
         state.userRole = "customer";
       })
       // ACTIVATE
