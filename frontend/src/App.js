@@ -1,4 +1,5 @@
 // App.js
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -14,8 +15,22 @@ import CustomerRoutes from "./routes/CustomerRoutes";
 import StadiumAdminRoutes from "./routes/StadiumAdminRoutes";
 import AdminRoutes from "./routes/AdminRoutes";
 import "./App.css";
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserInfo } from "./features/auth/authSlice";
 
 function App() {
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    // Only fetch user info if there is a valid token.
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (storedUser && storedUser.access) {
+      dispatch(getUserInfo());
+    }
+  }, [dispatch]);
+  
+
   return (
     <Router>
       <Nav />
