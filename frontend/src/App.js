@@ -17,6 +17,9 @@ import AdminRoutes from "./routes/AdminRoutes";
 import "./App.css";
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserInfo } from "./features/auth/authSlice";
+import PhotoGallery from './components/PhotoGallery';
+import StadiumGalleryDetail from './components/StadiumGalleryDetail';
+
 
 function App() {
   const dispatch = useDispatch();
@@ -42,7 +45,11 @@ function App() {
           <Route path="/activate/:uid/:token" element={<ActivatePage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/password/reset/confirm/:uid/:token" element={<ResetPasswordPageConfirm />} />
-          
+          <Route path="/photo-gallery" element={<PhotoGallery />} />
+          <Route path="/photo-gallery/:id" element={<StadiumGalleryDetail />} />
+
+
+
           {/* Role-based Routes */}
           <Route path="/customer/*" element={<CustomerRoutes />} />
           <Route path="/stadium/*" element={<StadiumAdminRoutes />} />

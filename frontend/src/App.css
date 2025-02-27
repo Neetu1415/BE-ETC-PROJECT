@@ -1,5 +1,4 @@
 
-
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
 /* Reset all margins, paddings, and other default styles */
@@ -18,7 +17,7 @@
   --color-bg: #ffffff; /* Change background color to white */
   --color-bg-variant: #f0f0f0; /* Light gray for variant background */
   --color-primary: #007bff;
-  --color-primary-variant: #0056b3;
+  --color-primary-variant: #0057b367;
   --color-accent: #ff4500;
   --color-accent-variant: #cc3700;
   --color-white: #fff;
@@ -40,6 +39,9 @@ body {
   background: var(--color-bg);
   color: var(--color-bg-variant);
   line-height: 1.7;
+  background: linear-gradient(135deg, #fff, #fff);
+  background-attachment: fixed;
+  background-size: cover;
 }
 
 /* General styles for containers */
@@ -142,95 +144,186 @@ img {
 }
 
 /* ==================== HOME PAGE ==================== */
-
-/* ==================== HOME PAGE ==================== */
-
-
-.main__title {
-  font-size: 3rem;
-  color: var(--color-primary);
-  text-align: center;
-  margin-top: 2rem;
-
-  @media screen and (min-width: 1200px) {
-    font-size: 5rem;
-    margin-top: 4rem;
-  }
+/* Overall wrapper: two boxes side by side with a 160px gap */
+.home-page-wrapper {
+  display: flex;
+  gap: 160px;               /* Space between the left and right boxes */
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding-top: 0px;
+  padding-left: 92px;
+  width: 100%;
+  margin-top: -20px;
 }
 
-/* Main container styling with increased height, border, padding, and margin */
-.home-page__container {
-  background: url(../public/image/bambolimstadium.jpg);
-  border: 4px solid #007bff; /* Increased border thickness */
-  border-radius: 15px; /* Optional: more rounded corners */
-  padding: 5rem; /* Increased padding inside the container */
-  max-width: 600px; /* Slightly larger container width */
-  margin: 7rem auto; /* Increased margin to create more space around the container */
-  min-height: 400px; /* Increased minimum height */
-  background-color: #f9f9f9; /* Optional: light background for the container */
-  text-align: center; /* Align content in the center */
-  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.15); /* Enhanced shadow for more depth */
-  display: flex; /* Center content vertically */
-  flex-direction: column;
-  justify-content: center;
+/* Left Box: Image with overlay text */
+.left-box {
+  position: relative;
+  width: 790px;             /* Adjust as needed */
+  margin-top: 1px;
 }
 
-/* Add border for home page buttons */
-.home__buttons {
+.welcome-image {
+  width: 100%;
+  height: auto;
+  border-radius: 7px;
+  display: block;
+  min-height: 500px;
+}
+
+/* Semi-transparent overlay + text container */
+.welcome-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 7px;
+  background: rgba(0, 0, 0, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2rem;
-  margin-top: 3rem; /* Adjust spacing for buttons */
+  text-align: center; 
+}
 
-  @media screen and (min-width: 1200px) {
-    .btn {
-      font-size: 1.5rem;
-    }
+/* Heading text styling inside the overlay */
+.welcome-overlay h1 {
+  margin: 0;
+  color: #ffffff;
+  font-family: 'Montserrat', Arial, sans-serif;
+  font-size: 5rem;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: 1px;
+}
 
-    gap: 7rem;
-    margin-top: 4rem;
+/* Right Box */
+.right-box {
+  width: 420px;
+  min-height: 300px;
+  border-radius: 7px;
+  padding: 1px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Home page container styled as a white rectangle with a gray border */
+.home-page__container {
+  background: radial-gradient(
+    circle at 30% 30%,
+    #ffffff 0%,
+    #fff 40%,
+    #fff 70%,
+    #ffffff 100%
+  );
+  background-size: 200% 200%;
+  animation: animateGradient 15s ease infinite;
+  border: 2px solid #ccc;
+  border-radius: 7px;
+  padding: 76px;
+  width: 402px;
+  max-width: 90%;
+  box-sizing: border-box;
+  min-height: 536px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  opacity: 0.87;
+}
+
+/* Keyframes for the animated gradient */
+@keyframes animateGradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }
 
-/* Add border to Login and Signup links */
-.home__buttons .btn-signin, 
-.home__buttons .btn-signup {
-  border: 2px solid #007bff; /* Add border to buttons */
-  padding: 14px 28px; /* Slightly larger padding for buttons */
-  font-size: 1.2rem;
-  font-weight: bold;
-  border-radius: 5px; /* Optional: more rounded corners for buttons */
-  transition: var(--transition);
+/* Logo image styling */
+.logo {
+  display: block;
+  margin: 0 auto;
+  max-width: 195px;
+  height: auto;
 }
 
-/* Hover effects for Login and Signup buttons */
-.home__buttons .btn-signin:hover {
-  background-color: var(--color-primary);
-  color: var(--color-white); /* Change color on hover */
+/* Main title styling */
+.main__title {
+  font-size: 2.5rem;
+  text-align: center;
+  color: #333;
+  margin-top: 1rem;
 }
 
-.home__buttons .btn-signup:hover {
-  background-color: var(--color-primary-variant);
-  color: var(--color-white);
+/* Buttons container */
+.home__buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
 }
 
-/* Button styles */
-.btn-primary {
-  background-color: #007bff;
-  color: #fff;
+/* Base button styling */
+.btn {
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
+/* Secondary button: white background with blue border */
 .btn-secondary {
   background-color: #fff;
   color: #007bff;
   border: 2px solid #007bff;
 }
 
+/* Primary button: blue background */
+.btn-primary {
+  background-color: #007bff;
+  color: #fff;
+  border: 2px solid #007bff;
+}
 
-/*STADIUM DASHBOARD and ADMIN DASHBOARD STYLES*/
+/* Hover effects for buttons */
+.btn:hover {
+  opacity: 0.8;
+}
 
-/* Container styling */
+/* Responsive adjustments for mobile view */
+@media screen and (max-width: 600px) {
+  .home-page__container {
+    padding: 40px;
+    min-height: 300px;
+  }
+  
+  .main__title {
+    font-size: 2rem;
+  }
+
+  .welcome-overlay h1 {
+    font-size: 3rem;
+  }
+  
+  .home__buttons {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+/* ==================== STADIUM DASHBOARD and ADMIN DASHBOARD STYLES ==================== */
+
+/* ==================== STADIUM DASHBOARD and ADMIN DASHBOARD STYLES ==================== */
+
+/* Container styling remains unchanged */
 .dashboard-container {
   max-width: 1200px;
   margin: 2rem auto;
@@ -242,21 +335,21 @@ img {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Heading styling */
+/* Updated Heading styling: text in black */
 .dashboard-container h1 {
   text-align: center;
-  color: #333;
+  color: #000; /* Changed from #333 to black */
   margin-bottom: 1rem;
 }
 
-/* Paragraph styling */
+/* Updated Paragraph styling: text in black */
 .dashboard-container p {
   text-align: center;
-  color: #555;
+  color: #000; /* Changed from #555 to black */
   margin-bottom: 1.5rem;
 }
 
-/* Table styling */
+/* Table styling with text set to black */
 .bookings-table {
   width: 100%;
   border-collapse: collapse;
@@ -268,98 +361,261 @@ img {
   padding: 12px 15px;
   border: 1px solid #ddd;
   text-align: left;
+  color: #000; /* Set text color to black */
 }
 
-/* Table header styling */
 .bookings-table th {
   background-color: #f4f4f4;
   font-weight: bold;
-  color: #333;
+  color: #000; /* Set text color to black */
 }
 
-/* Zebra striping for table rows */
+/* Zebra striping and hover effects remain unchanged */
 .bookings-table tbody tr:nth-child(even) {
   background-color: #f9f9f9;
 }
 
-/* Hover effect for table rows */
 .bookings-table tbody tr:hover {
   background-color: #eaeaea;
   transition: background-color 0.3s ease;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .dashboard-container {
-    padding: 1rem;
-  }
-  
-  .bookings-table th,
-  .bookings-table td {
-    padding: 10px;
-  }
-}
-
 .generate-log-button {
-  background-color: #007BFF; /* Blue background */
-  color: #fff;               /* White text */
-  border: none;              /* Remove default border */
-  padding: 10px 20px;        /* Space inside the button */
-  border-radius: 5px;        /* Rounded corners */
-  cursor: pointer;           /* Pointer cursor on hover */
-  font-size: 16px;           /* Increase font size */
-  margin-top: 20px;          /* Spacing above the button */
-  transition: background-color 0.3s ease; /* Smooth hover effect */
-   
+  background-color: #007BFF;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+  transition: background-color 0.3s ease;
 }
 
 .generate-log-button:hover {
-  background-color: #0056b3; /* Darker blue on hover */
+  background-color: #0056b3;
 }
-
 
 /* ==================== NAV ==================== */
 
-/* Navigation base styles */
-.navbar {
+/* Overall AppBar background */
+.nav-appbar {
+  background-color: #1f1f38;
+}
+
+/* -- Top row (logo only) -- */
+.nav-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 16px;
+  height: 80px;
+}
+
+/* -- Horizontal line under the top row -- */
+.nav-line {
+  width: 100%;
+  height: 1.5px;
+  background-color: #ffffff;
+}
+
+/* -- Second row (toolbar) -- */
+.nav-toolbar {
+  min-height: 60px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: var(--color-bg);
-  padding: 1rem;
 }
 
-.logo {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: var(--color-primary);
-  text-decoration: none;
-}
-
-.nav-links {
+/* Mobile view: Left section (hamburger) */
+.nav-mobile-left {
   display: flex;
+  align-items: center;
 }
 
-.nav-childs {
-  margin-right: 1rem;
+/* Desktop left section (hamburger) */
+.nav-left {
+  display: flex;
+  align-items: center;
 }
 
-.nav-links .nav-childs:last-child {
-  margin-right: 0;
+/* Center section (navigation items) */
+.nav-center {
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+  gap: 3.5rem;
 }
 
-.nav-childs {
+/* Right section (profile) */
+.nav-right {
+  display: flex;
+  align-items: center;
+}
+
+/* Logo styling */
+.nav-logo {
+  height: 60px;
+  width: auto;
+}
+
+/* Hamburger icon styling */
+.nav-hamburger {
+  margin-right: 16px;
+}
+
+/* Navigation item links */
+.nav-item {
+  color: white;
   text-decoration: none;
-  color: var(--color-white);
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  transition: var(--transition);
+  font-weight: 700;
 }
 
-.nav-childs:hover,
-.nav-childs:focus {
-  background-color: var(--color-primary);
-  color: var(--color-white);
+.nav-item:hover {
+  text-decoration: underline;
+}
+
+/* Profile text */
+.nav-profile {
+  color: white;
+}
+
+/* Drawer styles */
+.nav-drawer {
+  background-color: #1f1f38;
+}
+
+/* Drawer list and items */
+.drawer-list {
+  width: 250px;
+  background-color: #1f1f38;
+  height: 100%;
+}
+
+.drawer-item {
+  color: white;
+}
+
+.drawer-icon {
+  color: white;
+}
+
+/* Spacer to push content below the fixed header */
+.nav-spacer {
+  margin-top: 140px;
+}
+
+/* ==================== PHOTO GALLERY ==================== */
+
+/* Gallery container */
+.gallery-container {
+  padding: 20px;
+  background-color: #fff;
+  min-height: 100vh;
+  text-align: center;
+}
+
+/* Title for the gallery */
+.gallery-title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: var(--color-primary); /* Changed from #333 to the primary blue */
+}
+
+/* Grid of stadium tiles */
+.stadium-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Each stadium tile */
+.stadium-item {
+  text-decoration: none;
+  color: var(--color-primary); /* Changed from #333 to the primary blue */
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.stadium-item:hover {
+  transform: scale(1.03);
+}
+
+/* Stadium thumbnail image */
+.stadium-thumbnail {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+/* Stadium name */
+.stadium-name {
+  margin-top: 10px;
+  font-size: 1.2rem;
+}
+
+/* Detail page container */
+.stadium-detail-container {
+  padding: 20px;
+  background-color: #fff;
+  min-height: 100vh;
+  text-align: center;
+}
+
+/* Detail page title */
+.stadium-detail-title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Grid for stadium detail images */
+.stadium-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Each image in the detail grid */
+.stadium-detail-item {
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.stadium-detail-image {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.stadium-detail-item:hover .stadium-detail-image {
+  transform: scale(1.05);
+}
+
+/* Back link styling */
+.back-link {
+  display: inline-block;
+  margin-top: 20px;
+  font-size: 1rem;
+  color: #007bff;
+  text-decoration: none;
+  border: 1px solid #007bff;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.back-link:hover {
+  background: #007bff;
+  color: #fff;
 }
 
 /* ==================== AUTH PAGES ==================== */
@@ -391,56 +647,65 @@ img {
 .auth_container .main_title {
   font-size: 3rem;
 }
+
 /* ==================== Dashboard and Tables ==================== */
 
 .title {
   text-align: center;
-  margin-bottom: 10px;
-  font-size: 1.8rem;
-  color: #000000 !important;
+  margin-bottom: 20px;
+  font-size: 3rem;
+  font-weight: bold;
+  color: #000;
 }
 
 .table-container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 64px;
+  width: 90%;
+  max-width: 1200px;
+  margin: 64px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .facility-table {
-  width: 50%;
+  width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 .facility-table th,
 .facility-table td {
-  border: 2px solid #444;
-  padding: 10px;
+  border: 2px solid #ddd;
+  padding: 15px;
   text-align: center;
-  color: #000; /* Set text color to black */
+  color: #333;
 }
 
 .facility-table th {
-  background-color: #fff;
-  font-weight: bold;
+  background: linear-gradient(45deg, #eef6f1, #cfddec);
+  color: #000;
+  font-weight: 600;
 }
 
 .facility-table tr:nth-child(even) {
-  background-color: #f0f0f0;
+  background-color: #f7f7f7;
 }
 
-.facility-table tr:nth-child(odd) {
-  background-color: #ffffff;
+.facility-table tr:hover {
+  background-color: #e5f9f9;
+  transition: background-color 0.3s ease;
 }
 
 /* ==================== Booked Slots ==================== */
 .booked-slots-container {
-  padding: 20px;
+  padding: 30px;
   max-width: 1200px;
-  margin-bottom: 20px;
-  font-family: Arial, sans-serif;
+  margin: 40px auto;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-family: 'Poppins', sans-serif;
 }
 
 .booked-slots-container h2 {
@@ -462,7 +727,7 @@ img {
   padding: 12px 15px;
   border: 1px solid #ddd;
   text-align: left;
-  color: #000; /* Set text color to black */
+  color: #000;
 }
 
 .booked-slots-table tr:hover {
@@ -472,88 +737,105 @@ img {
 .booked-slots-container p {
   text-align: center;
   font-size: 18px;
-  color: #888;
+  color: #000 !important;
 }
 
 .booked-slots-container p.loading {
-  font-size: 18px;
-  text-align: center;
   color: #00A8E8;
 }
 
 .booked-slots-container p.error {
-  font-size: 18px;
-  text-align: center;
-  color: #e74c3c !important; /* Bright red text for error */
-  font-weight: bold; /* Make error message more prominent */
+  color: #e74c3c !important;
+  font-weight: bold;
   padding: 12px;
-  background-color: #f8d7da; /* Light red background */
-  border: 1px solid #e74c3c; /* Red border to distinguish error */
-  border-radius: 5px; /* Rounded corners */
+  background-color: #f8d7da;
+  border: 1px solid #e74c3c;
+  border-radius: 5px;
   margin-top: 20px;
   width: 100%;
-  box-sizing: border-box; /* To avoid overflow */
-  display: inline-block; /* Ensure the box takes up only as much space as needed */
+  box-sizing: border-box;
+  display: inline-block;
 }
-
-/* Ensure all text is black unless it's explicitly overridden */
-.booked-slots-container p {
-  color: #000 !important; /* Override the light gray color for any p tag */
-}
-
-/* Additional styles if needed to make text stand out more globally */
-body {
-  color: #000; /* Ensure text color for the body is black unless otherwise specified */
-}
-
 
 /* ==================== Dropdown Container ==================== */
 
 .dropdown-container {
+  max-width: 1400px;
+  margin: 3rem auto;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  transition: box-shadow 0.3s ease-in-out;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  background-color: #f4f4f4;
-  padding: 20px;
+}
+
+.dropdown-container:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
 .title-container {
-  margin-bottom: 20px;
+  text-align: center;
+  margin-bottom: 1.5rem;
 }
 
 .title1 {
+  margin: 0;
   font-size: 2rem;
-  font-weight: bold;
-  text-align: center;
-  color: #333;
+  font-weight: 600;
+  color: #333333;
 }
 
-select {
-  padding: 10px;
-  font-size: 1rem;
-  margin: 10px 0;
-  width: 250px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+/* Ensure MUI TextFields have consistent spacing */
+.MuiFormControl-root,
+.MuiTextField-root {
+  margin-bottom: 1.5rem !important;
 }
 
-select:focus {
-  outline: none;
-  border-color: #007BFF;
+.date-picker-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
-/* Rate display */
+.submit-button-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.MuiButton-root {
+  background-color: #1976d2 !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  padding: 0.75rem 1.5rem !important;
+  border-radius: 4px !important;
+  text-transform: none !important;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.MuiButton-root:hover {
+  box-shadow: 0 0 12px 2px rgba(25, 118, 210, 0.9);
+}
+
 .rate-display {
-  background-color: #f0f0f0;
-  color: black;
-  padding: 10px;
-  margin-top: 20px;
-  font-size: 1.2em;
-  border-radius: 5px;
+  margin: 1rem 0;
   text-align: center;
-  font-weight: bold;
+}
+
+.rate-display h3 {
+  font-weight: 500;
+  color: #444444;
+  margin: 0;
+}
+
+.error-info {
+  color: #d32f2f;
+  margin: 1rem 0;
+  font-weight: 500;
+  text-align: center;
 }
 
 /* ==================== Spinner ==================== */
@@ -581,3 +863,110 @@ select:focus {
     transform: rotate(360deg);
   }
 }
+
+/* ==================== RESPONSIVE MEDIA QUERIES ==================== */
+
+/* Tablet adjustments */
+@media screen and (max-width: 768px) {
+  .container {
+    width: var(--container-width-md);
+    padding: 0 15px;
+  }
+
+  .home-page-wrapper {
+    flex-direction: column;
+    gap: 30px;
+    padding-left: 20px;
+    margin-top: 0;
+  }
+
+  .left-box {
+    width: 100%;
+  }
+
+  .right-box {
+    width: 100%;
+  }
+
+  .nav-header,
+  .nav-toolbar {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .nav-center {
+    gap: 1rem;
+  }
+
+  .dashboard-container,
+  .table-container,
+  .dropdown-container,
+  .auth__form,
+  .stadium-detail-grid,
+  .stadium-grid {
+    width: 100%;
+    padding: 15px;
+  }
+
+  .facility-table,
+  .booked-slots-table {
+    font-size: 0.95rem;
+  }
+}
+
+/* Mobile adjustments */
+@media screen and (max-width: 600px) {
+  .container {
+    width: var(--container-width-sm);
+    padding: 0 10px;
+  }
+
+  .home-page-wrapper {
+    flex-direction: column;
+    gap: 20px;
+    padding-left: 10px;
+    margin-top: 0;
+  }
+
+  .left-box,
+  .right-box {
+    width: 100%;
+  }
+
+  .welcome-overlay h1 {
+    font-size: 3rem;
+  }
+
+  .main__title {
+    font-size: 2rem;
+  }
+
+  .nav-header,
+  .nav-toolbar {
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+  }
+
+  /* Optionally hide the center nav items on very small screens */
+  .nav-center {
+    display: none;
+  }
+
+  .dashboard-container,
+  .table-container,
+  .dropdown-container,
+  .auth__form,
+  .stadium-detail-grid,
+  .stadium-grid {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .facility-table,
+  .booked-slots-table {
+    font-size: 0.9rem;
+  }
+}
+
+
