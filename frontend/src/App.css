@@ -39,7 +39,8 @@ body {
   background: var(--color-bg);
   color: var(--color-bg-variant);
   line-height: 1.7;
-  background: linear-gradient(135deg, #fff, #fff);
+  background: linear-gradient(135deg, #fff, #fff, );
+ 
   background-attachment: fixed;
   background-size: cover;
 }
@@ -150,10 +151,10 @@ img {
   gap: 160px;               /* Space between the left and right boxes */
   justify-content: flex-start;
   align-items: flex-start;
-  padding-top: 0px;
+  padding-top: 0px;         /* Reduced top padding to shift layout upward */
   padding-left: 92px;
   width: 100%;
-  margin-top: -20px;
+  margin-top: -20px;        /* Shifts the entire wrapper upward */
 }
 
 /* Left Box: Image with overlay text */
@@ -190,23 +191,23 @@ img {
 .welcome-overlay h1 {
   margin: 0;
   color: #ffffff;
-  font-family: 'Montserrat', Arial, sans-serif;
-  font-size: 5rem;
+  font-family: 'Montserrat', Arial, sans-serif; /* or your chosen font */
+  font-size: 5rem;         /* Adjust font size as needed */
   font-weight: 600;
-  line-height: 1.1;
-  letter-spacing: 1px;
+  line-height: 1.1;        /* Reduces space between lines */
+  letter-spacing: 1px;     /* Optional: slight letter spacing */
 }
 
 /* Right Box */
 .right-box {
-  width: 420px;
-  min-height: 300px;
+  width: 420px;           
+  min-height: 300px;      
   border-radius: 7px;
   padding: 1px;
   box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex;            /* Enables flexbox layout */
+  align-items: center;      /* Vertically centers content */
+  justify-content: center;  /* Horizontally centers content */
 }
 
 /* Home page container styled as a white rectangle with a gray border */
@@ -222,7 +223,7 @@ img {
   animation: animateGradient 15s ease infinite;
   border: 2px solid #ccc;
   border-radius: 7px;
-  padding: 76px;
+  padding: 76px;                 /* Updated padding */
   width: 402px;
   max-width: 90%;
   box-sizing: border-box;
@@ -319,11 +320,12 @@ img {
   }
 }
 
-/* ==================== STADIUM DASHBOARD and ADMIN DASHBOARD STYLES ==================== */
 
-/* ==================== STADIUM DASHBOARD and ADMIN DASHBOARD STYLES ==================== */
 
-/* Container styling remains unchanged */
+
+/*STADIUM DASHBOARD and ADMIN DASHBOARD STYLES*/
+
+/* Container styling */
 .dashboard-container {
   max-width: 1200px;
   margin: 2rem auto;
@@ -335,21 +337,21 @@ img {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Updated Heading styling: text in black */
+/* Heading styling */
 .dashboard-container h1 {
   text-align: center;
-  color: #000; /* Changed from #333 to black */
+  color: #333;
   margin-bottom: 1rem;
 }
 
-/* Updated Paragraph styling: text in black */
+/* Paragraph styling */
 .dashboard-container p {
   text-align: center;
-  color: #000; /* Changed from #555 to black */
+  color: #555;
   margin-bottom: 1.5rem;
 }
 
-/* Table styling with text set to black */
+/* Table styling */
 .bookings-table {
   width: 100%;
   border-collapse: collapse;
@@ -361,42 +363,59 @@ img {
   padding: 12px 15px;
   border: 1px solid #ddd;
   text-align: left;
-  color: #000; /* Set text color to black */
 }
 
+/* Table header styling */
 .bookings-table th {
   background-color: #f4f4f4;
   font-weight: bold;
-  color: #000; /* Set text color to black */
+  color: #333;
 }
 
-/* Zebra striping and hover effects remain unchanged */
+/* Zebra striping for table rows */
 .bookings-table tbody tr:nth-child(even) {
   background-color: #f9f9f9;
 }
 
+/* Hover effect for table rows */
 .bookings-table tbody tr:hover {
   background-color: #eaeaea;
   transition: background-color 0.3s ease;
 }
 
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 1rem;
+  }
+  
+  .bookings-table th,
+  .bookings-table td {
+    padding: 10px;
+  }
+}
+
 .generate-log-button {
-  background-color: #007BFF;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  margin-top: 20px;
-  transition: background-color 0.3s ease;
+  background-color: #007BFF; /* Blue background */
+  color: #fff;               /* White text */
+  border: none;              /* Remove default border */
+  padding: 10px 20px;        /* Space inside the button */
+  border-radius: 5px;        /* Rounded corners */
+  cursor: pointer;           /* Pointer cursor on hover */
+  font-size: 16px;           /* Increase font size */
+  margin-top: 20px;          /* Spacing above the button */
+  transition: background-color 0.3s ease; /* Smooth hover effect */
+   
 }
 
 .generate-log-button:hover {
-  background-color: #0056b3;
+  background-color: #0056b3; /* Darker blue on hover */
 }
 
+
 /* ==================== NAV ==================== */
+
+/* App.css */
 
 /* Overall AppBar background */
 .nav-appbar {
@@ -407,21 +426,21 @@ img {
 .nav-header {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  padding: 0 16px;
-  height: 80px;
+  justify-content: flex-start;  /* Logo on the left */
+  padding: 0 16px;             /* Horizontal padding */
+  height: 80px;                /* Increased height */
 }
 
 /* -- Horizontal line under the top row -- */
 .nav-line {
   width: 100%;
   height: 1.5px;
-  background-color: #ffffff;
+  background-color: #ffffff; /* White line */
 }
 
 /* -- Second row (toolbar) -- */
 .nav-toolbar {
-  min-height: 60px;
+  min-height: 60px; /* Adjust as needed */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -444,7 +463,7 @@ img {
   display: flex;
   flex-grow: 1;
   justify-content: center;
-  gap: 3.5rem;
+  gap: 3.5rem; /* Increase spacing between nav items */
 }
 
 /* Right section (profile) */
@@ -455,7 +474,7 @@ img {
 
 /* Logo styling */
 .nav-logo {
-  height: 60px;
+  height: 60px; /* Increase if you want a bigger logo */
   width: auto;
 }
 
@@ -500,12 +519,13 @@ img {
   color: white;
 }
 
-/* Spacer to push content below the fixed header */
+/* Spacer to push content below the fixed header.
+   Adjust if your total header height is larger or smaller. */
 .nav-spacer {
-  margin-top: 140px;
+  margin-top: 140px; /* 80 (top row) + 60 (toolbar) = 140 total */
 }
 
-/* ==================== PHOTO GALLERY ==================== */
+/* src/components/PhotoGallery.css */
 
 /* Gallery container */
 .gallery-container {
@@ -519,7 +539,7 @@ img {
 .gallery-title {
   font-size: 2rem;
   margin-bottom: 20px;
-  color: var(--color-primary); /* Changed from #333 to the primary blue */
+  color: #333;
 }
 
 /* Grid of stadium tiles */
@@ -534,7 +554,7 @@ img {
 /* Each stadium tile */
 .stadium-item {
   text-decoration: none;
-  color: var(--color-primary); /* Changed from #333 to the primary blue */
+  color: inherit;
   border: 1px solid #ddd;
   padding: 10px;
   border-radius: 8px;
@@ -618,6 +638,8 @@ img {
   color: #fff;
 }
 
+
+
 /* ==================== AUTH PAGES ==================== */
 
 .auth__form {
@@ -648,6 +670,9 @@ img {
   font-size: 3rem;
 }
 
+
+/* ==================== Dashboard and Tables ==================== */
+
 /* ==================== Dashboard and Tables ==================== */
 
 .title {
@@ -666,6 +691,7 @@ img {
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  
 }
 
 .facility-table {
@@ -697,6 +723,7 @@ img {
   transition: background-color 0.3s ease;
 }
 
+
 /* ==================== Booked Slots ==================== */
 .booked-slots-container {
   padding: 30px;
@@ -727,7 +754,7 @@ img {
   padding: 12px 15px;
   border: 1px solid #ddd;
   text-align: left;
-  color: #000;
+  color: #000; /* Set text color to black */
 }
 
 .booked-slots-table tr:hover {
@@ -737,45 +764,63 @@ img {
 .booked-slots-container p {
   text-align: center;
   font-size: 18px;
-  color: #000 !important;
+  color: #888;
 }
 
 .booked-slots-container p.loading {
+  font-size: 18px;
+  text-align: center;
   color: #00A8E8;
 }
 
 .booked-slots-container p.error {
-  color: #e74c3c !important;
-  font-weight: bold;
+  font-size: 18px;
+  text-align: center;
+  color: #e74c3c !important; /* Bright red text for error */
+  font-weight: bold; /* Make error message more prominent */
   padding: 12px;
-  background-color: #f8d7da;
-  border: 1px solid #e74c3c;
-  border-radius: 5px;
+  background-color: #f8d7da; /* Light red background */
+  border: 1px solid #e74c3c; /* Red border to distinguish error */
+  border-radius: 5px; /* Rounded corners */
   margin-top: 20px;
   width: 100%;
-  box-sizing: border-box;
-  display: inline-block;
+  box-sizing: border-box; /* To avoid overflow */
+  display: inline-block; /* Ensure the box takes up only as much space as needed */
 }
+
+/* Ensure all text is black unless it's explicitly overridden */
+.booked-slots-container p {
+  color: #000 !important; /* Override the light gray color for any p tag */
+}
+
+/* Additional styles if needed to make text stand out more globally */
+body {
+  color: #000; /* Ensure text color for the body is black unless otherwise specified */
+}
+
 
 /* ==================== Dropdown Container ==================== */
 
+/* Main container for the booking form */
 .dropdown-container {
-  max-width: 1400px;
-  margin: 3rem auto;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 1400px; /* Updated max width */
+  margin: 3rem auto;                /* Center horizontally & add vertical space */
+  background-color: #ffffff;        /* Card-like background */
+  border-radius: 8px;               /* Smooth corners */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow */
   padding: 2rem;
   transition: box-shadow 0.3s ease-in-out;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center; /* Center content */
 }
 
+/* Hover effect for desktop users (optional) */
 .dropdown-container:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
+/* Title section */
 .title-container {
   text-align: center;
   margin-bottom: 1.5rem;
@@ -791,35 +836,40 @@ img {
 /* Ensure MUI TextFields have consistent spacing */
 .MuiFormControl-root,
 .MuiTextField-root {
-  margin-bottom: 1.5rem !important;
+  margin-bottom: 1.5rem !important; /* Add spacing between fields */
 }
 
+/* Center the date picker */
 .date-picker-container {
   display: flex;
   justify-content: center;
   width: 100%;
 }
 
+/* Center the submit button */
 .submit-button-container {
   display: flex;
   justify-content: center;
   width: 100%;
 }
 
+/* If you want uniform button styling, override MUI's defaults */
 .MuiButton-root {
-  background-color: #1976d2 !important;
+  background-color: #1976d2 !important; /* MUI primary color by default */
   color: #ffffff !important;
   font-weight: 600 !important;
   padding: 0.75rem 1.5rem !important;
   border-radius: 4px !important;
-  text-transform: none !important;
+  text-transform: none !important;      /* Remove uppercase transform */
   transition: box-shadow 0.3s ease-in-out;
 }
 
+/* Glowing effect on hover for the submit button */
 .MuiButton-root:hover {
   box-shadow: 0 0 12px 2px rgba(25, 118, 210, 0.9);
 }
 
+/* Rate display section */
 .rate-display {
   margin: 1rem 0;
   text-align: center;
@@ -831,12 +881,26 @@ img {
   margin: 0;
 }
 
+/* Error info section */
 .error-info {
-  color: #d32f2f;
+  color: #d32f2f;  /* Material UI error red */
   margin: 1rem 0;
   font-weight: 500;
   text-align: center;
 }
+
+/* You can add media queries for responsive tweaks, e.g.: */
+/*
+@media (max-width: 600px) {
+  .dropdown-container {
+    padding: 1rem;
+    margin: 1rem;
+  }
+  .title1 {
+    font-size: 1.6rem;
+  }
+}
+*/
 
 /* ==================== Spinner ==================== */
 
@@ -863,110 +927,4 @@ img {
     transform: rotate(360deg);
   }
 }
-
-/* ==================== RESPONSIVE MEDIA QUERIES ==================== */
-
-/* Tablet adjustments */
-@media screen and (max-width: 768px) {
-  .container {
-    width: var(--container-width-md);
-    padding: 0 15px;
-  }
-
-  .home-page-wrapper {
-    flex-direction: column;
-    gap: 30px;
-    padding-left: 20px;
-    margin-top: 0;
-  }
-
-  .left-box {
-    width: 100%;
-  }
-
-  .right-box {
-    width: 100%;
-  }
-
-  .nav-header,
-  .nav-toolbar {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .nav-center {
-    gap: 1rem;
-  }
-
-  .dashboard-container,
-  .table-container,
-  .dropdown-container,
-  .auth__form,
-  .stadium-detail-grid,
-  .stadium-grid {
-    width: 100%;
-    padding: 15px;
-  }
-
-  .facility-table,
-  .booked-slots-table {
-    font-size: 0.95rem;
-  }
-}
-
-/* Mobile adjustments */
-@media screen and (max-width: 600px) {
-  .container {
-    width: var(--container-width-sm);
-    padding: 0 10px;
-  }
-
-  .home-page-wrapper {
-    flex-direction: column;
-    gap: 20px;
-    padding-left: 10px;
-    margin-top: 0;
-  }
-
-  .left-box,
-  .right-box {
-    width: 100%;
-  }
-
-  .welcome-overlay h1 {
-    font-size: 3rem;
-  }
-
-  .main__title {
-    font-size: 2rem;
-  }
-
-  .nav-header,
-  .nav-toolbar {
-    flex-direction: column;
-    align-items: center;
-    height: auto;
-  }
-
-  /* Optionally hide the center nav items on very small screens */
-  .nav-center {
-    display: none;
-  }
-
-  .dashboard-container,
-  .table-container,
-  .dropdown-container,
-  .auth__form,
-  .stadium-detail-grid,
-  .stadium-grid {
-    width: 100%;
-    padding: 10px;
-  }
-
-  .facility-table,
-  .booked-slots-table {
-    font-size: 0.9rem;
-  }
-}
-
 
