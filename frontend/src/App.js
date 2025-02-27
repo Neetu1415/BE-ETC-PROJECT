@@ -21,18 +21,18 @@ import PhotoGallery from './components/PhotoGallery';
 import StadiumGalleryDetail from './components/StadiumGalleryDetail';
 
 
+
 function App() {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
+  const { user, authLoaded } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    // Only fetch user info if there is a valid token.
     const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (storedUser && storedUser.access) {
+    if (storedUser && storedUser.access && !authLoaded) {
       dispatch(getUserInfo());
     }
-  }, [dispatch]);
-  
+  }, [dispatch, authLoaded]);
+
 
   return (
     <Router>

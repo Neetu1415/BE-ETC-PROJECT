@@ -15,6 +15,7 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   message: "",
+  authLoaded: false,  ///
 };
 
 // REGISTER thunk
@@ -203,6 +204,7 @@ const authSlice = createSlice({
         state.user = null;
         state.userInfo = {}; 
         state.userRole = "customer";
+        state.authLoaded = false;
       })
       // ACTIVATE
       .addCase(activate.pending, (state) => {
@@ -259,6 +261,7 @@ const authSlice = createSlice({
           state.userRole = action.payload.role;
         }
         state.userInfo = action.payload;
+        state.authLoaded = true;
       });
   },
 });
