@@ -13,7 +13,9 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  useMediaQuery
+  useMediaQuery,
+  Menu,
+  MenuItem
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
@@ -28,6 +30,7 @@ import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 
 const Nav = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null); // For profile dropdown
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -43,6 +46,14 @@ const Nav = () => {
     navigate('/');
   };
 
+  const handleProfileClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseProfileMenu = () => {
+    setAnchorEl(null);
+  };
+
   const closeDrawer = () => setDrawerOpen(false);
 
   // Horizontal nav items (desktop) without Logout
@@ -51,7 +62,6 @@ const Nav = () => {
       <NavLink to="/" className="nav-item">
         Home
       </NavLink>
-
       {user && user.role === 'customer' && (
         <NavLink to="/customer/dashboard" className="nav-item">
           Customer Dashboard
@@ -67,7 +77,6 @@ const Nav = () => {
           Admin Dashboard
         </NavLink>
       )}
-
       {user && user.role === 'customer' && (
         <>
           <NavLink to="/customer/booking" className="nav-item">
@@ -78,7 +87,6 @@ const Nav = () => {
           </NavLink>
         </>
       )}
-
       {/* Photo Gallery link */}
       <NavLink to="/photo-gallery" className="nav-item">
         Photo Gallery
@@ -97,7 +105,6 @@ const Nav = () => {
           <ListItemText primary={`Profile: ${userInfo.email}`} />
         </ListItem>
       )}
-
       <ListItem
         button
         component={NavLink}
@@ -110,7 +117,6 @@ const Nav = () => {
         </ListItemIcon>
         <ListItemText primary="Home" />
       </ListItem>
-
       {user && user.role === 'customer' && (
         <ListItem
           button
@@ -153,7 +159,6 @@ const Nav = () => {
           <ListItemText primary="Admin Dashboard" />
         </ListItem>
       )}
-
       {user && user.role === 'customer' && (
         <>
           <ListItem
@@ -182,7 +187,6 @@ const Nav = () => {
           </ListItem>
         </>
       )}
-
       <ListItem
         button
         component={NavLink}
@@ -190,13 +194,11 @@ const Nav = () => {
         onClick={closeDrawer}
         className="drawer-item"
       >
-        
         <ListItemIcon>
           <PhotoLibraryIcon className="drawer-icon" />
         </ListItemIcon>
         <ListItemText primary="Photo Gallery" />
       </ListItem>
-
       {user && (
         <ListItem button onClick={handleLogout} className="drawer-item">
           <ListItemIcon>
@@ -211,7 +213,7 @@ const Nav = () => {
   return (
     <>
       <AppBar position="fixed" className="nav-appbar">
-        {/* -- Top row: Logo only -- */}
+        {/* Top row: Logo only */}
         <Box className="nav-header">
           <Box
             component="img"
@@ -220,13 +222,10 @@ const Nav = () => {
             className="nav-logo"
           />
         </Box>
-
-        {/* -- Horizontal line under logo -- */}
+        {/* Horizontal line under logo */}
         <Box className="nav-line" />
-
-        {/* -- Second row (Toolbar) for navigation items -- */}
+        {/* Toolbar for navigation items */}
         <Toolbar className="nav-toolbar">
-          {/* Mobile: show hamburger + optional user info */}
           {isMobile ? (
             <Box className="nav-mobile-left">
               <IconButton
@@ -237,10 +236,8 @@ const Nav = () => {
               >
                 <MenuIcon />
               </IconButton>
-              {/* Add anything else you want in the top-left for mobile */}
             </Box>
           ) : (
-            /* Desktop: Show hamburger on the left if you still want a Drawer */
             <Box className="nav-left">
               <IconButton
                 color="inherit"
@@ -252,22 +249,50 @@ const Nav = () => {
               </IconButton>
             </Box>
           )}
-
           {/* Centered nav items */}
           <Box className="nav-center">{navItems}</Box>
-
-          {/* Right side: Profile info */}
+          {/* Right side: Profile info with dropdown */}
           <Box className="nav-right">
             {userInfo?.email && (
-              <Typography variant="body1" className="nav-profile">
-                Profile: {userInfo.email}
+              <Typography
+                variant="body1"
+                className="nav-profile"
+                onClick={handleProfileClick}
+                style={{ cursor: 'pointer' }}
+              >
+                {userInfo.email}
               </Typography>
             )}
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleCloseProfileMenu}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+            >
+              <MenuItem
+                onClick={() => {
+                  handleCloseProfileMenu();
+                  handleLogout();
+                }}
+              >
+                <ListItemIcon>
+                  <LogoutIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText primary="Logout" />
+              </MenuItem>
+            </Menu>
           </Box>
         </Toolbar>
       </AppBar>
 
-      {/* Drawer (for mobile) */}
+      {/* Drawer (mobile) */}
       <Drawer
         open={drawerOpen}
         onClose={closeDrawer}
@@ -283,4 +308,3 @@ const Nav = () => {
 };
 
 export default Nav;
-
