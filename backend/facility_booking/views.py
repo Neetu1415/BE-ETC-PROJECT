@@ -67,6 +67,8 @@ class BookingListView(APIView):
         facility_type = request.query_params.get('facility_type')  # e.g., 'GY'
         sports_complex = request.query_params.get('sports_complex')  # e.g., 'TM'
         booking_date = request.query_params.get('booking_date')  # e.g., '2025-02-01'
+        user_email = request.query_params.get('user_email')  # e.g., 'abc@gmail.com'
+        user_id = request.query_params.get('user_id')  # Alternatively, you can use user id
 
         bookings = Booking.objects.all()
         # Filter on facility_type (assuming your Sports_complex model has a field named 'facility')
@@ -84,6 +86,11 @@ class BookingListView(APIView):
                 Q(booking_date=booking_date, booking_end_date__isnull=True)
             )
 
+                # New: Filter by user email or user id
+        if user_email:
+            bookings = bookings.filter(user__email=user_email)
+        if user_id:
+            bookings = bookings.filter(user__id=user_id)
 
         booking_list = [
             {

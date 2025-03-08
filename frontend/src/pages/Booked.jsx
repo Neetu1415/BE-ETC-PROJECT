@@ -1,22 +1,26 @@
+// src/pages/Booked.jsx
 import React, { useState, useEffect } from 'react';
-import {  facilityMapping, complexMapping } from './Mapping';
+import { useSelector } from 'react-redux';
+import { facilityMapping, complexMapping } from './Mapping';
 
 const Booked = () => {
   const [bookedSlots, setBookedSlots] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    console.log('Access Token:', localStorage.getItem('access_token')); // Debug token
+  // Get detailed user info from Redux (which should include email)
+  const { userInfo } = useSelector((state) => state.auth);
 
+  useEffect(() => {
     const fetchBookedSlots = async () => {
       try {
-        const token = localStorage.getItem('access_token'); // Ensure the token exists
+        const token = localStorage.getItem('access_token');
         if (!token) {
           throw new Error('Access token not found. Please log in.');
         }
 
-        const response = await fetch('http://localhost:8000/facility_booking/bookings/list/', {
+        // Pass the user email as a query parameter
+        const response = await fetch(`http://localhost:8000/facility_booking/bookings/list/?user_email=${encodeURIComponent(userInfo.email)}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -27,28 +31,29 @@ const Booked = () => {
         if (!response.ok) {
           throw new Error(`Failed to fetch booked slots. Status: ${response.status}`);
         }
-        
 
         const data = await response.json();
-        console.log('Fetched Booked Slots:', data); // Debug response
-        setBookedSlots(data.bookings || []); // Ensure data format matches expected structure
+        console.log('Fetched Booked Slots:', data);
+        setBookedSlots(data.bookings || []);
       } catch (error) {
         console.error('Error fetching booked slots:', error);
-        setError(error.message); // Store the error message
+        setError(error.message);
       } finally {
-        setLoading(false); // Stop loading spinner
+        setLoading(false);
       }
     };
 
-    fetchBookedSlots();
-  }, []); // Run only once when the component mounts
+    if (userInfo && userInfo.email) {
+      fetchBookedSlots();
+    }
+  }, [userInfo]);
 
   if (loading) return <p>Loading booked slots...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (
     <div className="booked-slots-container">
-      <h2>Booked Slots</h2>
+      <h2>Your Booked Slots</h2>
       {bookedSlots.length > 0 ? (
         <table className="booked-slots-table">
           <thead>
@@ -75,7 +80,7 @@ const Booked = () => {
           </tbody>
         </table>
       ) : (
-        <p>No booked slots available.</p>
+        <p>No booked slots available for your account.</p>
       )}
     </div>
   );
