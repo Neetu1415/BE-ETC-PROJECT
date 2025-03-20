@@ -35,6 +35,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1','testserver']
 CORS_ALLOWED_ORIGINS=[
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+   
     ]
     
 
@@ -57,6 +58,7 @@ INSTALLED_APPS = [
     'users',
     'sports_facility',
     'facility_booking',
+    'camera',
 ]
 
 MIDDLEWARE = [

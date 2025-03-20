@@ -1,0 +1,8 @@
+runs/.gitignore
+/runs
+/Output
+MyReadme.md
+yolov7.pt
+*.pt
+/env
+env/
