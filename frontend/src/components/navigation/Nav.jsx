@@ -1,3 +1,4 @@
+// src/components/navigation/Nav.jsx
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -27,6 +28,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import BookIcon from '@mui/icons-material/Book';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
+import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications'; // <-- Imported icon for alerts
 
 const Nav = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -73,9 +75,14 @@ const Nav = () => {
         </NavLink>
       )}
       {user && user.role === 'overall_admin' && (
-        <NavLink to="/admin/dashboard" className="nav-item">
-          Admin Dashboard
-        </NavLink>
+        <>
+          <NavLink to="/admin/dashboard" className="nav-item">
+            Admin Dashboard
+          </NavLink>
+          <NavLink to="/admin/alerts" className="nav-item">
+            Alerts
+          </NavLink>
+        </>
       )}
       {user && user.role === 'customer' && (
         <>
@@ -146,18 +153,32 @@ const Nav = () => {
         </ListItem>
       )}
       {user && user.role === 'overall_admin' && (
-        <ListItem
-          button
-          component={NavLink}
-          to="/admin/dashboard"
-          onClick={closeDrawer}
-          className="drawer-item"
-        >
-          <ListItemIcon>
-            <DashboardIcon className="drawer-icon" />
-          </ListItemIcon>
-          <ListItemText primary="Admin Dashboard" />
-        </ListItem>
+        <>
+          <ListItem
+            button
+            component={NavLink}
+            to="/admin/dashboard"
+            onClick={closeDrawer}
+            className="drawer-item"
+          >
+            <ListItemIcon>
+              <DashboardIcon className="drawer-icon" />
+            </ListItemIcon>
+            <ListItemText primary="Admin Dashboard" />
+          </ListItem>
+          <ListItem
+            button
+            component={NavLink}
+            to="/admin/alerts"
+            onClick={closeDrawer}
+            className="drawer-item"
+          >
+            <ListItemIcon>
+              <CircleNotificationsIcon className="drawer-icon" />
+            </ListItemIcon>
+            <ListItemText primary="Alerts" />
+          </ListItem>
+        </>
       )}
       {user && user.role === 'customer' && (
         <>
