@@ -1,0 +1,2 @@
+rtsp://admin:GECGATE@321@172.28.0.95:554/stream
+

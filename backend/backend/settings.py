@@ -30,13 +30,11 @@ SECRET_KEY = "django-insecure-$j&_e2jqwv4!+85d%79(m5_6&f@qf-5yeirbwlh4h)&1n*%v@u
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1','testserver','192.168.43.134']
+ALLOWED_HOSTS = []
 
 CORS_ALLOWED_ORIGINS=[
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    "http://localhost:8081",
-    "http://192.168.43.134:8000",
     ]
     
 
@@ -57,8 +55,6 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     #internal apps
     'users',
-    'sports_facility',
-    'facility_booking',
 ]
 
 MIDDLEWARE = [
