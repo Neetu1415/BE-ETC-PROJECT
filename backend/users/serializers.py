@@ -3,6 +3,7 @@ from djoser.serializers import UserSerializer
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from sports_facility.models import Sports_complex, COMPLEX_class
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 User = get_user_model()
 
@@ -31,3 +32,13 @@ class CustomUserSerializer(UserSerializer):
         fields = ['id', 'email', 'first_name', 'last_name', 'role', 'stadium']
 
 
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        # include extra fields
+        token["role"]    = user.role
+        if user.stadium:
+            token["stadium_id"]   = user.stadium.id
+            token["stadium_code"] = user.stadium.name
+        return token

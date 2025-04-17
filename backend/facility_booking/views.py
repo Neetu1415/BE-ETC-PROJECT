@@ -11,14 +11,19 @@ from rest_framework import status
 from rest_framework.views import APIView
 from datetime import date , timedelta
 from django.db import models
+from rest_framework.permissions import AllowAny
+from .models import Charges
+from .serializers import SlotSerializer
+
+class ChargesListView(APIView):
+    permission_classes = [AllowAny]  # Now public
+
+    def get(self, request, *args, **kwargs):
+        slots = Charges.objects.all()
+        serializer = SlotSerializer(slots, many=True)
+        return Response(serializer.data)
 
 
-
-@api_view(['GET'])
-def slots(request):
-    slots = Charges.objects.all()
-    serializer = SlotSerializer(slots, many=True)
-    return Response(serializer.data)
 
 
 from .serializers import BookingSerializer
