@@ -21,7 +21,7 @@ const StadiumDashboard = () => {
         if (!stadiumCode) throw new Error('Stadium admin has no assigned stadium');
 
         // Filter bookings by stadiumCode on the backend.
-        const response = await fetch(`http://localhost:8000/facility_booking/bookings/list/?sports_complex=${stadiumCode}`, {
+        const response = await fetch(`http://localhost:8000/api/v1/facility_booking/bookings/list/?sports_complex=${stadiumCode}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

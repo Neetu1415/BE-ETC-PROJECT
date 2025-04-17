@@ -85,7 +85,7 @@ const FacilityBookings = () => {
   useEffect(() => {
     const fetchCharges = async () => {
       try {
-        const res = await fetch('http://localhost:8000/facility_booking/charges/');
+        const res = await fetch('http://localhost:8000/api/v1/facility_booking/charges/');
         if (!res.ok) throw new Error('Failed to fetch charges');
         const data = await res.json();
         setCharges(Array.isArray(data) ? data : []);
@@ -184,7 +184,7 @@ const FacilityBookings = () => {
             accessToken = await refreshAccessToken();
             if (!accessToken) return;
           }
-          const res = await fetch(`http://localhost:8000/facility_booking/bookings/list/?${params.toString()}`, {
+          const res = await fetch(`http://localhost:8000/api/v1/facility_booking/bookings/list/?${params.toString()}`, {
             headers: { Authorization: `Bearer ${accessToken}` },
           });
           if (!res.ok) throw new Error("Failed to fetch filtered bookings");
@@ -215,7 +215,7 @@ const FacilityBookings = () => {
             accessToken = await refreshAccessToken();
             if (!accessToken) return;
           }
-          const res = await fetch(`http://localhost:8000/facility_booking/bookings/fully-booked/?${params.toString()}`, {
+          const res = await fetch(`http://localhost:8000/api/v1/facility_booking/bookings/fully-booked/?${params.toString()}`, {
             headers: { Authorization: `Bearer ${accessToken}` },
           });
           if (!res.ok) throw new Error("Failed to fetch fully booked dates");
@@ -389,7 +389,7 @@ const FacilityBookings = () => {
         accessToken = await refreshAccessToken();
         if (!accessToken) return;
       }
-      const response = await fetch('http://localhost:8000/facility_booking/bookings/', {
+      const response = await fetch('http://localhost:8000/api/v1/facility_booking/bookings/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

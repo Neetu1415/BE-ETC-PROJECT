@@ -14,7 +14,7 @@ const AdminDashboard = () => {
         const token = localStorage.getItem('access_token');
         if (!token) throw new Error('No access token found');
         
-        const response = await fetch('http://localhost:8000/facility_booking/bookings/list/', {
+        const response = await fetch('http://localhost:8000/api/v1/facility_booking/bookings/list/', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

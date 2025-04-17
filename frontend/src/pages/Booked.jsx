@@ -20,7 +20,7 @@ const Booked = () => {
         }
 
         // Pass the user email as a query parameter
-        const response = await fetch(`http://localhost:8000/facility_booking/bookings/list/?user_email=${encodeURIComponent(userInfo.email)}`, {
+        const response = await fetch(`http://localhost:8000/api/v1/facility_booking/bookings/list/?user_email=${encodeURIComponent(userInfo.email)}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

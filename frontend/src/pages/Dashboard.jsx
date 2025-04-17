@@ -13,7 +13,7 @@ const FacilityBookings = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const response = await fetch('http://localhost:8000/facility_booking/charges/');
+        const response = await fetch('http://localhost:8000/api/v1/facility_booking/charges/');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

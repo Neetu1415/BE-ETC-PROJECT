@@ -23,7 +23,7 @@ const Alerts = () => {
         if (!token) {
           throw new Error('Access token not found. Please log in.');
         }
-        const response = await fetch('http://127.0.0.1:8000/camera/alerts/', {
+        const response = await fetch('http://127.0.0.1:8000/api/v1/camera/alerts/', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
