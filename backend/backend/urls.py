@@ -51,5 +51,5 @@ urlpatterns = [
     path('api/v1/camera/', include('camera.urls')),
 
     # …and *only after* all of the above, hand *everything else* to React
-    re_path(r'^.*$', TemplateView.as_view(template_name="index.html")),
+    #enre_path(r'^.*$', TemplateView.as_view(template_name="index.html")),
 ]
