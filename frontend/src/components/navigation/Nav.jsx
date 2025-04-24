@@ -14,6 +14,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  ListItemButton,
   useMediaQuery,
   Menu,
   MenuItem
@@ -28,11 +29,11 @@ import HomeIcon from '@mui/icons-material/Home';
 import BookIcon from '@mui/icons-material/Book';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
-import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications'; // <-- Imported icon for alerts
+import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
 
 const Nav = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null); // For profile dropdown
+  const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -40,201 +41,28 @@ const Nav = () => {
   const { user, userInfo } = useSelector((state) => state.auth);
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
+    localStorage.clear();
     dispatch(logout());
     dispatch(reset());
     navigate('/');
   };
 
-  const handleProfileClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleCloseProfileMenu = () => {
-    setAnchorEl(null);
-  };
-
+  const handleProfileClick = (event) => setAnchorEl(event.currentTarget);
+  const handleCloseProfileMenu = () => setAnchorEl(null);
   const closeDrawer = () => setDrawerOpen(false);
 
-  // Horizontal nav items (desktop) without Logout
-  const navItems = (
-    <>
-      <NavLink to="/" className="nav-item">
-        Home
-      </NavLink>
-      {user && user.role === 'customer' && (
-        <NavLink to="/customer/dashboard" className="nav-item">
-          Customer Dashboard
-        </NavLink>
-      )}
-      {user && user.role === 'stadium_admin' && (
-        <NavLink to="/stadium/dashboard" className="nav-item">
-          Stadium Dashboard
-        </NavLink>
-      )}
-      {user && user.role === 'overall_admin' && (
-        <>
-          <NavLink to="/admin/dashboard" className="nav-item">
-            Admin Dashboard
-          </NavLink>
-          <NavLink to="/admin/alerts" className="nav-item">
-            Alerts
-          </NavLink>
-        </>
-      )}
-      {user && user.role === 'customer' && (
-        <>
-          <NavLink to="/customer/booking" className="nav-item">
-            Booking
-          </NavLink>
-          <NavLink to="/customer/booked" className="nav-item">
-            Booked
-          </NavLink>
-        </>
-      )}
-      {/* Photo Gallery link */}
-      <NavLink to="/photo-gallery" className="nav-item">
-        Photo Gallery
-      </NavLink>
-    </>
-  );
-
-  // Drawer (mobile) nav items (includes Logout)
-  const drawerItems = (
-    <List className="drawer-list">
-      {isMobile && userInfo?.email && (
-        <ListItem className="drawer-item">
-          <ListItemIcon>
-            <AccountCircleIcon className="drawer-icon" />
-          </ListItemIcon>
-          <ListItemText primary={`Profile: ${userInfo.email}`} />
-        </ListItem>
-      )}
-      <ListItem
-        button
-        component={NavLink}
-        to="/"
-        onClick={closeDrawer}
-        className="drawer-item"
-      >
-        <ListItemIcon>
-          <HomeIcon className="drawer-icon" />
-        </ListItemIcon>
-        <ListItemText primary="Home" />
-      </ListItem>
-      {user && user.role === 'customer' && (
-        <ListItem
-          button
-          component={NavLink}
-          to="/customer/dashboard"
-          onClick={closeDrawer}
-          className="drawer-item"
-        >
-          <ListItemIcon>
-            <DashboardIcon className="drawer-icon" />
-          </ListItemIcon>
-          <ListItemText primary="Customer Dashboard" />
-        </ListItem>
-      )}
-      {user && user.role === 'stadium_admin' && (
-        <ListItem
-          button
-          component={NavLink}
-          to="/stadium/dashboard"
-          onClick={closeDrawer}
-          className="drawer-item"
-        >
-          <ListItemIcon>
-            <DashboardIcon className="drawer-icon" />
-          </ListItemIcon>
-          <ListItemText primary="Stadium Dashboard" />
-        </ListItem>
-      )}
-      {user && user.role === 'overall_admin' && (
-        <>
-          <ListItem
-            button
-            component={NavLink}
-            to="/admin/dashboard"
-            onClick={closeDrawer}
-            className="drawer-item"
-          >
-            <ListItemIcon>
-              <DashboardIcon className="drawer-icon" />
-            </ListItemIcon>
-            <ListItemText primary="Admin Dashboard" />
-          </ListItem>
-          <ListItem
-            button
-            component={NavLink}
-            to="/admin/alerts"
-            onClick={closeDrawer}
-            className="drawer-item"
-          >
-            <ListItemIcon>
-              <CircleNotificationsIcon className="drawer-icon" />
-            </ListItemIcon>
-            <ListItemText primary="Alerts" />
-          </ListItem>
-        </>
-      )}
-      {user && user.role === 'customer' && (
-        <>
-          <ListItem
-            button
-            component={NavLink}
-            to="/customer/booking"
-            onClick={closeDrawer}
-            className="drawer-item"
-          >
-            <ListItemIcon>
-              <AddBoxIcon className="drawer-icon" />
-            </ListItemIcon>
-            <ListItemText primary="Booking" />
-          </ListItem>
-          <ListItem
-            button
-            component={NavLink}
-            to="/customer/booked"
-            onClick={closeDrawer}
-            className="drawer-item"
-          >
-            <ListItemIcon>
-              <BookIcon className="drawer-icon" />
-            </ListItemIcon>
-            <ListItemText primary="Booked" />
-          </ListItem>
-        </>
-      )}
-      <ListItem
-        button
-        component={NavLink}
-        to="/photo-gallery"
-        onClick={closeDrawer}
-        className="drawer-item"
-      >
-        <ListItemIcon>
-          <PhotoLibraryIcon className="drawer-icon" />
-        </ListItemIcon>
-        <ListItemText primary="Photo Gallery" />
-      </ListItem>
-      {user && (
-        <ListItem button onClick={handleLogout} className="drawer-item">
-          <ListItemIcon>
-            <LogoutIcon className="drawer-icon" />
-          </ListItemIcon>
-          <ListItemText primary="Logout" />
-        </ListItem>
-      )}
-    </List>
+  const buildNavItem = (to, icon, label) => (
+    <ListItem disablePadding>
+      <ListItemButton component={NavLink} to={to} onClick={closeDrawer} className="drawer-item" sx={{ color: 'white' }}>
+        <ListItemIcon sx={{ color: 'white' }}>{icon}</ListItemIcon>
+        <ListItemText primary={label} />
+      </ListItemButton>
+    </ListItem>
   );
 
   return (
     <>
       <AppBar position="fixed" className="nav-appbar">
-        {/* Top row: Logo only */}
         <Box className="nav-header">
           <Box
             component="img"
@@ -243,43 +71,43 @@ const Nav = () => {
             className="nav-logo"
           />
         </Box>
-        {/* Horizontal line under logo */}
         <Box className="nav-line" />
-        {/* Toolbar for navigation items */}
         <Toolbar className="nav-toolbar">
-          {isMobile ? (
-            <Box className="nav-mobile-left">
-              <IconButton
-                color="inherit"
-                onClick={() => setDrawerOpen(true)}
-                edge="start"
-                className="nav-hamburger"
-              >
-                <MenuIcon />
-              </IconButton>
-            </Box>
-          ) : (
-            <Box className="nav-left">
-              <IconButton
-                color="inherit"
-                onClick={() => setDrawerOpen(true)}
-                edge="start"
-                className="nav-hamburger"
-              >
-                <MenuIcon />
-              </IconButton>
-            </Box>
-          )}
-          {/* Centered nav items */}
-          <Box className="nav-center">{navItems}</Box>
-          {/* Right side: Profile info with dropdown */}
+          <Box className="nav-left">
+            <IconButton
+              color="inherit"
+              onClick={() => setDrawerOpen(true)}
+              edge="start"
+              className="nav-hamburger"
+            >
+              <MenuIcon />
+            </IconButton>
+          </Box>
+          <Box className="nav-center" sx={{ color: 'white' }}>
+            <NavLink to="/" className="nav-item" style={{ color: 'white' }}>Home</NavLink>
+            {user?.role === 'customer' && <NavLink to="/customer/dashboard" className="nav-item" style={{ color: 'white' }}>Customer Dashboard</NavLink>}
+            {user?.role === 'stadium_admin' && <NavLink to="/stadium/dashboard" className="nav-item" style={{ color: 'white' }}>Stadium Dashboard</NavLink>}
+            {user?.role === 'overall_admin' && (
+              <>
+                <NavLink to="/admin/dashboard" className="nav-item" style={{ color: 'white' }}>Admin Dashboard</NavLink>
+                <NavLink to="/admin/alerts" className="nav-item" style={{ color: 'white' }}>Alerts</NavLink>
+              </>
+            )}
+            {user?.role === 'customer' && (
+              <>
+                <NavLink to="/customer/booking" className="nav-item" style={{ color: 'white' }}>Booking</NavLink>
+                <NavLink to="/customer/booked" className="nav-item" style={{ color: 'white' }}>Booked</NavLink>
+              </>
+            )}
+            <NavLink to="/photo-gallery" className="nav-item" style={{ color: 'white' }}>Photo Gallery</NavLink>
+          </Box>
           <Box className="nav-right">
             {userInfo?.email && (
               <Typography
                 variant="body1"
                 className="nav-profile"
                 onClick={handleProfileClick}
-                style={{ cursor: 'pointer' }}
+                sx={{ cursor: 'pointer', color: 'white' }}
               >
                 {userInfo.email}
               </Typography>
@@ -288,24 +116,11 @@ const Nav = () => {
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
               onClose={handleCloseProfileMenu}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             >
-              <MenuItem
-                onClick={() => {
-                  handleCloseProfileMenu();
-                  handleLogout();
-                }}
-              >
-                <ListItemIcon>
-                  <LogoutIcon fontSize="small" />
-                </ListItemIcon>
+              <MenuItem onClick={() => { handleCloseProfileMenu(); handleLogout(); }}>
+                <ListItemIcon><LogoutIcon fontSize="small" /></ListItemIcon>
                 <ListItemText primary="Logout" />
               </MenuItem>
             </Menu>
@@ -313,16 +128,33 @@ const Nav = () => {
         </Toolbar>
       </AppBar>
 
-      {/* Drawer (mobile) */}
-      <Drawer
-        open={drawerOpen}
-        onClose={closeDrawer}
-        PaperProps={{ className: 'nav-drawer' }}
-      >
-        {drawerItems}
+      <Drawer open={drawerOpen} onClose={closeDrawer} PaperProps={{ className: 'nav-drawer' }}>
+        <List className="drawer-list">
+          {isMobile && userInfo?.email && (
+            <ListItem disablePadding>
+              <ListItemIcon sx={{ color: 'white' }}><AccountCircleIcon /></ListItemIcon>
+              <ListItemText primary={`Profile: ${userInfo.email}`} sx={{ color: 'white' }} />
+            </ListItem>
+          )}
+          {buildNavItem('/', <HomeIcon />, 'Home')}
+          {user?.role === 'customer' && buildNavItem('/customer/dashboard', <DashboardIcon />, 'Customer Dashboard')}
+          {user?.role === 'stadium_admin' && buildNavItem('/stadium/dashboard', <DashboardIcon />, 'Stadium Dashboard')}
+          {user?.role === 'overall_admin' && buildNavItem('/admin/dashboard', <DashboardIcon />, 'Admin Dashboard')}
+          {user?.role === 'overall_admin' && buildNavItem('/admin/alerts', <CircleNotificationsIcon />, 'Alerts')}
+          {user?.role === 'customer' && buildNavItem('/customer/booking', <AddBoxIcon />, 'Booking')}
+          {user?.role === 'customer' && buildNavItem('/customer/booked', <BookIcon />, 'Booked')}
+          {buildNavItem('/photo-gallery', <PhotoLibraryIcon />, 'Photo Gallery')}
+          {user && (
+            <ListItem disablePadding>
+              <ListItemButton onClick={() => { closeDrawer(); handleLogout(); }} sx={{ color: 'white' }}>
+                <ListItemIcon sx={{ color: 'white' }}><LogoutIcon /></ListItemIcon>
+                <ListItemText primary="Logout" />
+              </ListItemButton>
+            </ListItem>
+          )}
+        </List>
       </Drawer>
 
-      {/* Spacer to push main content below fixed header */}
       <Box className="nav-spacer" />
     </>
   );

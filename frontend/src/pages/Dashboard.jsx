@@ -48,15 +48,15 @@ const FacilityBookings = () => {
             </tr>
           </thead>
           <tbody>
-            {bookings.map((booking) => (
-              <tr key={booking.id}>
-                <td>{booking.uid}</td>
-                <td>{complexMapping[booking.sports_complex_name] || 'Unknown sports complex'}</td>
-                <td>{facilityMapping[booking.facility_type] || 'Unknown facility'}</td>
-                <td>{groupMapping[booking.group] || 'Unknown Group'}</td>
-                <td>{typeMapping[booking.type] || 'Unknown Type'}</td>
-                <td>{booking.rate}</td>
-              </tr>
+          {bookings.map((booking, idx) => (
+             <tr key={booking.id ?? idx}>
+              <td>{booking.uid}</td>
+              <td>{complexMapping[booking.sports_complex_name] || 'Unknown sports complex'}</td>
+              <td>{facilityMapping[booking.facility_type] || 'Unknown facility'}</td>
+              <td>{groupMapping[booking.group] || 'Unknown Group'}</td>
+              <td>{typeMapping[booking.type] || 'Unknown Type'}</td>
+              <td>{booking.rate}</td>
+            </tr>
             ))}
           </tbody>
         </table>
