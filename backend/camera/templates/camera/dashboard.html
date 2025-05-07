@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Alerts Dashboard</h1>
+
+<h2>Recent Alerts</h2>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Facility</th>
+            <th>Camera</th>
+            <th>Message</th>
+            <th>Violation Count</th>  <!-- Display violation count -->
+            <th>Last Violation</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for alert in alerts %}
+        <tr>
+            <td>{{ alert.sports_complex.name }}</td>
+            <td>{{ alert.camera.ip_url }}</td>
+            <td>{{ alert.message }}</td>
+            <td>{{ alert.violation_count }}</td>  <!-- Display the incremented violation count -->
+            <td>{{ alert.last_violation }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">No recent alerts.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Recent Detections</h2>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Facility</th>
+            <th>Camera</th>
+            <th>Detected Count</th>
+            <th>Timestamp</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for detection in detections %}
+        <tr>
+            <td>{{ detection.sports_complex.name }}</td>
+            <td>{{ detection.camera.ip_url }}</td>
+            <td>{{ detection.detected_count }}</td>
+            <td>{{ detection.timestamp }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">No recent detections.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+
+
+
+
+<!-- from django.urls import path
+from . import views
+
+app_name = 'camera'
+
+urlpatterns = [
+    path('dashboard/', views.alerts_dashboard, name='dashboard'),
+] -->

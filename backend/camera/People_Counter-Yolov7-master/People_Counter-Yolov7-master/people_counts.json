@@ -1,0 +1,26 @@
+[
+    {
+        "timestamp": "2025-04-25 11:35:09",
+        "people_count": 13,
+        "is_booked": false,
+        "expected_count": 0,
+        "facility_id": 2,
+        "camera_id": 3
+    },
+    {
+        "timestamp": "2025-04-25 11:45:10",
+        "people_count": 15,
+        "is_booked": false,
+        "expected_count": 0,
+        "facility_id": 2,
+        "camera_id": 3
+    },
+    {
+        "timestamp": "2025-04-25 11:55:13",
+        "people_count": 13,
+        "is_booked": false,
+        "expected_count": 0,
+        "facility_id": 2,
+        "camera_id": 3
+    }
+]
