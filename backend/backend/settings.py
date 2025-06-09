@@ -30,13 +30,13 @@ SECRET_KEY = "django-insecure-$j&_e2jqwv4!+85d%79(m5_6&f@qf-5yeirbwlh4h)&1n*%v@u
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost", "192.168.85.67", "127.0.0.1"]
 
 CORS_ALLOWED_ORIGINS=[
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://localhost:8081",
-
+    "http://192.168.85.67:8000",
     ]
     
 
@@ -173,7 +173,7 @@ DJOSER = {
     "USER_CREATE_PASSWORD_RETYPE": True,
     "USERNAME_CHANGED_EMAIL_CONFIRMATION": True,
     "PASSWORD_CHANGED_EMAIL_CONFIRMATION": True,
-    "SEND_CONFIRMATION_EMAIL": True,
+    "SEND_CONFIRMATION_EMAIL": False,
     "PASSWORD_RESET_CONFIRM_URL": "password/reset/confirm/{uid}/{token}",
     "SET_PASSWORD_RETYPE": True,
     "PASSWORD_RESET_CONFIRM_RETYPE": True,
@@ -188,12 +188,16 @@ DJOSER = {
     },
 }
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "sandbox.smtp.mailtrap.io"
-EMAIL_USE_TLS = True
-EMAIL_PORT = "2525"
-EMAIL_HOST_USER = "a2e6b82843d32f"
-EMAIL_HOST_PASSWORD = "7fdd8afc07a3fc"
-DEFAULT_FROM_EMAIL = "sportshub202543@gmail.com"
+EMAIL_BACKEND       = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST          = "smtp.gmail.com"
+EMAIL_USE_TLS       = True
+EMAIL_PORT          = 587
+
+# Pull the values from your .env file
+EMAIL_HOST_USER     = env("EMAIL_HOST_USER")     # yourgmailaddress@gmail.com
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD") # 16-character App Password
+
+# The “From:” header on every outgoing mail
+DEFAULT_FROM_EMAIL  = env("EMAIL_HOST_USER")
 DOMAIN = "localhost:3000"
 SITE_NAME = "WEBSITE"
