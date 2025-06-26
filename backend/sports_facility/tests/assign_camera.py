@@ -12,7 +12,8 @@ def run():
         # Create a new camera for this complex
         camera = Camera.objects.create(
             sports_complex=complex,
-            ip_url='rtsp://admin:password@192.168.1.100:554/stream',
+            # ip_url='rtsp://admin:password@192.168.1.100:554/stream',
+            ip_url='rtsp://admin:GECMAIN%40124@172.31.1.60:554/Streaming/Channels/101/',
             description='Main entrance camera',
             is_active=True
         )
@@ -20,14 +21,14 @@ def run():
         print(f"Camera added to {complex}: {camera.ip_url}")
 
         # Add second camera
-        camera2 = Camera.objects.create(
-            sports_complex=complex,
-            ip_url='rtsp://admin:password@192.168.1.101:554/stream',
-            description='Field view camera',
-            is_active=True
-        )
+        # camera2 = Camera.objects.create(
+        #     sports_complex=complex,
+        #     ip_url='rtsp://admin:password@192.168.1.101:554/stream',
+        #     description='Field view camera',
+        #     is_active=True
+        # )
         
-        print(f"Second camera added to {complex}: {camera2.ip_url}")
+        # print(f"Second camera added to {complex}: {camera2.ip_url}")
 
     except Exception as e:
         print(f"Error: {str(e)}")

@@ -1,26 +1,26 @@
 [
     {
-        "timestamp": "2025-04-25 11:35:09",
-        "people_count": 13,
+        "timestamp": "2025-06-26 10:51:49",
+        "people_count": 0,
         "is_booked": false,
         "expected_count": 0,
-        "facility_id": 2,
-        "camera_id": 3
+        "facility_id": 1,
+        "camera_id": 5
     },
     {
-        "timestamp": "2025-04-25 11:45:10",
-        "people_count": 15,
+        "timestamp": "2025-06-26 11:01:50",
+        "people_count": 1,
         "is_booked": false,
         "expected_count": 0,
-        "facility_id": 2,
-        "camera_id": 3
+        "facility_id": 1,
+        "camera_id": 5
     },
     {
-        "timestamp": "2025-04-25 11:55:13",
-        "people_count": 13,
+        "timestamp": "2025-06-26 11:17:53",
+        "people_count": 0,
         "is_booked": false,
         "expected_count": 0,
-        "facility_id": 2,
-        "camera_id": 3
+        "facility_id": 1,
+        "camera_id": 5
     }
 ]

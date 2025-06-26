@@ -6,7 +6,8 @@ echo "Starting test sequence..."
 # source venv/bin/activate
 
 # Change to project directory
-cd /path/to/your/project
+cd "C:\Users\mitali ghadi\OneDrive\Desktop\BE-ETC-PROJECT-phase_2\backend"
+
 
 # Run migrations if needed
 echo "Running migrations..."

@@ -10,7 +10,8 @@ def alerts_dashboard(request):
     
     # Get recent alerts (last 24 hours)
     recent_alerts = FacilityAlert.objects.filter(
-        last_violation__gte=now - timedelta(hours=24)
+        last_violation__gte=now - timedelta(hours=24),
+        violation_count=3
     ).order_by('-last_violation')
 
     # Get recent detections (last hour)
@@ -31,7 +32,8 @@ def get_alerts(request):
     now = timezone.now()
     
     alerts = FacilityAlert.objects.filter(
-        last_violation__gte=now - timedelta(hours=24)
+        last_violation__gte=now - timedelta(hours=24),
+        violation_count=3 
     ).order_by('-last_violation').values(
         'id', 'message', 'violation_count', 'last_violation'
     )
