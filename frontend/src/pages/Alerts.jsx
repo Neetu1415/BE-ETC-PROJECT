@@ -80,6 +80,8 @@ const Alerts = () => {
                 <TableCell>{alert.message}</TableCell>
                 <TableCell>{alert.violation_count}</TableCell>
                 <TableCell>{alert.last_violation}</TableCell>
+                <TableCell>{new Date(alert.last_violation).toLocaleString('en-IN', {
+    				      dateStyle: 'medium',timeStyle: 'short',})}</TableCell>
               </TableRow>
             ))}
           </TableBody>
