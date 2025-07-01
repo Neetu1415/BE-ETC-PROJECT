@@ -61,8 +61,13 @@ INSTALLED_APPS = [
     'sports_facility',
     'facility_booking',
     'camera',
+    'django_crontab'
 ]
-
+CRONJOBS = [
+    #(' * * * *', 'cron_function.hello'),
+    # ('10 * * * *', 'camera.management.commands.run_yolo_cron.run_yolo'),
+     ('* * * * *', 'camera.People_Counter_Yolov7_master.People_Counter_Yolov7_master.detect.run_detect'),
+    ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
